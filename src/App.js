@@ -11,7 +11,7 @@ export default () => {
   const [tflPlanned, setTflPlanned] = useState([]) // Yellow Pins TFL
   const [loadedData, setLoadedData] = useState(false) // Loading Data Flag to prevent reloads
 
-  const [userLocation, setUserLocation] = useState(null)
+  const [clientLocation, setClientLocation] = useState(null)
 
 
   useEffect(() => {
@@ -21,14 +21,18 @@ export default () => {
         const today = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getUTCDate()
         const nextWeekDate = new Date(date.getTime() + 7 * 24 * 60 * 60 * 1000) 
         const nextWeek = nextWeekDate.getFullYear() + '-' + (nextWeekDate.getMonth()+1) + '-' + nextWeekDate.getUTCDate()
+
         const heIncidentsResponse = await fetch('http://m.highwaysengland.co.uk/feeds/rss/UnplannedEvents.xml') // fetch current HE incidents
         const heRoadworksResponse = await fetch('http://m.highwaysengland.co.uk/feeds/rss/CurrentAndFutureEvents.xml') // fetch current and planned HE roadworks
         const tflResponse = await fetch('https://api.tfl.gov.uk/Road/All/Disruption?startDate='+today+'&endDate='+nextWeek) // fetch current TFL disruptions, and current and planned TFL roadworks (default time frame 1 week)
+        
         const heIncidentsText = await heIncidentsResponse.text()
         const heRoadworksText = await heRoadworksResponse.text()
         const tflJson = await tflResponse.json()
 
+        let newHeIncidents = [], newHeRoadworksCurrent = [], newHeRoadworksPlanned = [], newTflSevere = [], newTflCurrent = [], newTflPlanned = []
         let parser, heIncidentsXml, heRoadworksXml
+
         if (window.DOMParser) { // parse XML
           parser = new DOMParser();
           heIncidentsXml = parser.parseFromString(heIncidentsText, "text/xml");
@@ -41,8 +45,7 @@ export default () => {
           heIncidentsXml.loadXML(heIncidentsText);
           heRoadworksXml.loadXML(heRoadworksText);
         }
-        let newHeIncidents = [], newHeRoadworksCurrent = [], newHeRoadworksPlanned = [], newTflSevere = [], newTflCurrent = [], newTflPlanned = []
-
+        
         const incidentItems = heIncidentsXml.getElementsByTagName("item")
         for(let i = 0; i < incidentItems.length; i++) { // loop through each incident, create Object for it and add to incident array
           let item = heIncidentsXml.getElementsByTagName("item")[i] // get current item
@@ -70,9 +73,9 @@ export default () => {
 
         const roadworksItems = heRoadworksXml.getElementsByTagName("item")
         let pushToArray = null
-        for(let i = 0; i < roadworksItems.length; i++) { // loop through each planned work, create Object for it and add to planned work array
+        for(let i = 0; i < roadworksItems.length; i++) { // loop through each planned and current roadwork, create Object for it and add to respective array
           let item = heRoadworksXml.getElementsByTagName("item")[i]// get current item
-          pushToArray = ((new Date(item.getElementsByTagName("overallStart")[0].innerHTML) <= date) && (date <= new Date(item.getElementsByTagName("overallEnd")[0].innerHTML))) ? newHeRoadworksCurrent : newHeRoadworksPlanned // if roadwork is currently being carried out
+          pushToArray = ((new Date(item.getElementsByTagName("overallStart")[0].innerHTML) <= date) && (date <= new Date(item.getElementsByTagName("overallEnd")[0].innerHTML))) ? newHeRoadworksCurrent : newHeRoadworksPlanned // determine if roadwork is currently being carried out
           pushToArray.push({
             author: item.getElementsByTagName("author")[0].innerHTML,
             category1: item.getElementsByTagName("category")[0].innerHTML,
@@ -95,12 +98,13 @@ export default () => {
           })
         }
 
-        for(let j = 0; j < tflJson.length; j++) {
+        for(let j = 0; j < tflJson.length; j++) { // loop through tfl data and add to respective arrays, will need to extract data we know we need at a later point, currently keeps everything
           pushToArray = (tflJson[j].severity === "Severe") 
             ? newTflSevere 
             : ((new Date(tflJson[j].startDateTime) <= date) && (date <= new Date (tflJson[j].endDateTime))) ? newTflCurrent : newTflPlanned
             pushToArray.push(tflJson[j])
         }
+
         setHeIncidents(newHeIncidents)
         setHeRoadworksCurrent(newHeRoadworksCurrent)
         setHeRoadworksPlanned(newHeRoadworksPlanned)
@@ -113,14 +117,14 @@ export default () => {
     fetchXML()
   },[loadedData])
 
-  useEffect(() => {
-    if(userLocation === null) {
-      const setCurrentPosition = position => setUserLocation([position.coords.latitude, position.coords.longitude]) 
+  useEffect(() => { // fetch client location
+    if(clientLocation === null) { // prevent continuous location fetching
+      const setCurrentPosition = position => setClientLocation([position.coords.latitude, position.coords.longitude]) 
       const positionError = err => {
         console.log(err)
       }
 
-      if (navigator.geolocation) { 
+      if(navigator.geolocation) { 
         navigator.geolocation.getCurrentPosition(setCurrentPosition, positionError, { 
           enableHighAccuracy: false, 
           timeout: 15000, 
@@ -130,6 +134,7 @@ export default () => {
     }
   })
   
+  // printing data to view in development
   if(loadedData){ // currently printed twice due to re-render on "DATA LOADED" below, not an issue
     console.log(heIncidents.length, heRoadworksCurrent.length, heRoadworksPlanned.length, tflSevere.length, tflCurrent.length, tflPlanned.length)
     console.log(heIncidents, heRoadworksCurrent, heRoadworksPlanned, tflSevere, tflCurrent, tflPlanned)
@@ -140,17 +145,6 @@ export default () => {
       <header className="App-header">
         {!loadedData ? <p>LOADING DATA!!!</p> : <p>DATA LOADED :)</p>}
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
