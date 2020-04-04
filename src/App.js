@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Route from './components/Route'
+import Map from './components/Map'
+import L from "leaflet";
+import './styles/App.css'; 
 
 export default () => {
   const [heIncidents, setHeIncidents] = useState([]) // Red Pins HE
@@ -12,6 +14,8 @@ export default () => {
   const [loadedData, setLoadedData] = useState(false) // Loading Data Flag to prevent reloads
 
   const [clientLocation, setClientLocation] = useState(null)
+  const [routeFrom, setRouteFrom] = useState(L.latLng(50.94, 0.264822))
+  const [routeTo, setRouteTo] = useState(L.latLng(50.954358, -0.134224))
 
 
   useEffect(() => {
@@ -126,7 +130,7 @@ export default () => {
 
       if(navigator.geolocation) { 
         navigator.geolocation.getCurrentPosition(setCurrentPosition, positionError, { 
-          enableHighAccuracy: false, 
+          enableHighAccuracy: true, 
           timeout: 15000, 
           maximumAge: 0 
         })
@@ -135,17 +139,20 @@ export default () => {
   })
   
   // printing data to view in development
-  if(loadedData){ // currently printed twice due to re-render on "DATA LOADED" below, not an issue
-    console.log(heIncidents.length, heRoadworksCurrent.length, heRoadworksPlanned.length, tflSevere.length, tflCurrent.length, tflPlanned.length)
-    console.log(heIncidents, heRoadworksCurrent, heRoadworksPlanned, tflSevere, tflCurrent, tflPlanned)
+  // if(loadedData){ // currently printed twice due to re-render on "DATA LOADED" below, not an issue
+  //   console.log(heIncidents.length, heRoadworksCurrent.length, heRoadworksPlanned.length, tflSevere.length, tflCurrent.length, tflPlanned.length)
+  //   console.log(heIncidents, heRoadworksCurrent, heRoadworksPlanned, tflSevere, tflCurrent, tflPlanned)
+  //   console.log(clientLocation)
+  // }
+
+  const handleRouteChange = (direction, value) => {
+    direction === 'to' ? setRouteTo(L.latLng(value[0].latlong[0], value[0].latlong[1])) : setRouteFrom(L.latLng(value[0].latlong[0], value[0].latlong[1]))
   }
 
   return (
     <div className="App">
-      <header className="App-header">
-        {!loadedData ? <p>LOADING DATA!!!</p> : <p>DATA LOADED :)</p>}
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
+      <Route handleRouteChange={handleRouteChange}/>
+      <Map currentPosition={clientLocation} from={routeFrom} to={routeTo}/>
     </div>
   );
 }

@@ -1,0 +1,43 @@
+.App {
+  text-align: center;
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.route {
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.map {
+  width: 80vw;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100vh;
+  color: black;
+}
+
+@media (max-width: 1000px) {
+  .App {
+    flex-direction: column;
+  }
+  .route {
+    width: 100%;
+    height: 30vh;
+  }
+  .map {
+    width: 100%;
+    height: 70vh;
+  }
+}
