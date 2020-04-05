@@ -1,11 +1,22 @@
+.routeInputs {
+  width: calc(100% - 20px);
+  padding: 10px;
+  position: relative;
+}
+
 .routeInputRow {
   display: flex;
   flex-direction: row;
   width: 100%;
-  margin: 5px;
+  margin-top: 5px;
 }
 
-.clearSelected {
+.button-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.clearSelected, .selectLocation {
   min-width: 40px;
   height: 40px;
   border-radius: .25rem;
@@ -14,9 +25,17 @@
   margin-left: 5px;
 }
 
-.clearSelected:hover {
+.clearSelected:hover, .selectLocation:hover {
   cursor: pointer;
   background-color: rgb(226, 226, 226);
+}
+
+.selectLocationfrom, .selectLocationto {
+  z-index: 101;
+}
+
+.form-control, .rbt-input-hint {
+  text-indent: 10px;
 }
 
 .rbt {
@@ -79,8 +98,67 @@
   width: 34px;
 }
 
-@media (max-width: 1000px) {
-  .rbt {
-    width: 50%;
+@media (max-width: 1600px) {
+  .routeInputRow {
+    flex-direction: column;
   }
+  .clearSelected, .selectLocation {
+    width: 100%;
+    margin-top: 5px;
+  }
+  .selectLocation {
+    margin-left: unset;
+  }
+}
+
+@media (max-width: 1200px) {
+  .routeInputs {
+    width: 50vw;
+  }
+  .routeInfo, .routeModeInfo {
+    width: 50vw !important;
+    max-width: calc(50vw - 46px) !important;
+    min-height: calc(20vh - 46px) !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .routeInputs {
+    width: calc(100vw - 38px);
+  }
+  .routeInfo, .routeModeInfo {
+    min-width: calc(100% - 46px);
+    width: calc(100vw - 38px);
+  }
+}
+
+.routeInfo {
+  width: 20vw;
+  max-width: calc(20vw - 46px);
+  height: 100%;
+  border-style: solid;
+  border-color: white;
+  margin: 10px;
+  padding: 10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  justify-content: center;
+}
+
+.routeModeInfo {
+  width: 20vw;
+  max-width: calc(20vw - 46px);
+  height: 100%;
+  border-style: dashed;
+  border-color: white;
+  margin: 10px;
+  padding: 10px;
+  z-index: 101;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  justify-content: center;
+}
+
+p {
+  line-height: 1.5rem;
 }

@@ -4,22 +4,34 @@
   min-height: 100vh;
   display: flex;
   flex-direction: row;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
 }
 
 .route {
-  width: 20vw;
+  min-width: 20vw;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  box-sizing: border-box;
+}
+
+.blur {
+  background-color: #000000;
+  opacity: 0.7;
+  position: absolute;
+  width: 20vw;
+  max-width: 20vw;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
 }
 
 .map {
   width: 80vw;
+}
+
+.mapto, .mapfrom {
+  cursor: crosshair;
 }
 
 .leaflet-container {
@@ -28,16 +40,30 @@
   color: black;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
   .App {
     flex-direction: column;
   }
   .route {
     width: 100%;
-    height: 30vh;
+    height: 100%;
+    min-height: 20vh;
+    flex-direction: row;
+    order: 2;
+  }
+  .blur {
+    min-width: 100%;
+    height: 100%;
   }
   .map {
     width: 100%;
-    height: 70vh;
+    max-height: 80vh;
+    order: 1;
+  }
+}
+
+@media (max-width: 800px) {
+  .route {
+    flex-direction: column;
   }
 }

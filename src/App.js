@@ -16,6 +16,8 @@ export default () => {
   const [clientLocation, setClientLocation] = useState(null)
   const [routeFrom, setRouteFrom] = useState(L.latLng(50.94, 0.264822))
   const [routeTo, setRouteTo] = useState(L.latLng(50.954358, -0.134224))
+  const [routeMode, setRouteMode] = useState("none")
+  const [locationPicked, setLocationPicked] = useState(null)
 
 
   useEffect(() => {
@@ -146,13 +148,32 @@ export default () => {
   // }
 
   const handleRouteChange = (direction, value) => {
-    direction === 'to' ? setRouteTo(L.latLng(value[0].latlong[0], value[0].latlong[1])) : setRouteFrom(L.latLng(value[0].latlong[0], value[0].latlong[1]))
+    if(direction === "to") {
+      setLocationPicked(value)
+      setRouteTo(L.latLng(value[0].latlng[0], value[0].latlng[1]))
+    } else {
+      setLocationPicked(value)
+      setRouteFrom(L.latLng(value[0].latlng[0], value[0].latlng[1]))
+    }
   }
 
   return (
     <div className="App">
-      <Route handleRouteChange={handleRouteChange}/>
-      <Map currentPosition={clientLocation} from={routeFrom} to={routeTo}/>
+      <Route 
+        handleRouteChange={handleRouteChange} 
+        routeMode={routeMode} 
+        setRouteMode={setRouteMode}
+        locationPicked={locationPicked}
+        setLocationPicked={setLocationPicked}
+      />
+      <Map 
+        handleRouteChange={handleRouteChange} 
+        routeMode={routeMode} 
+        setRouteMode={setRouteMode} 
+        currentPosition={clientLocation} 
+        from={routeFrom} 
+        to={routeTo}
+      />
     </div>
   );
 }
