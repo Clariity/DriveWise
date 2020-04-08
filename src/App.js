@@ -49,17 +49,18 @@ export default () => {
   const [loadedData, setLoadedData] = useState(false); // Loading Data Flag to prevent reloads
 
   const [clientLocation, setClientLocation] = useState(null);
-  const [routeFrom, setRouteFrom] = useState(L.latLng(50.94, 0.264822));
-  const [routeTo, setRouteTo] = useState(L.latLng(50.954358, -0.134224));
+  // const [routeFrom, setRouteFrom] = useState(L.latLng(50.94, 0.264822));
+  // const [routeTo, setRouteTo] = useState(L.latLng(50.954358, -0.134224));
+  const [routeFrom, setRouteFrom] = useState(null);
+  const [routeTo, setRouteTo] = useState(null);
   const [routeMode, setRouteMode] = useState("none");
   const [locationPicked, setLocationPicked] = useState(null);
 
   useEffect(() => {
     async function fetchXML() {
+      //set to loaded once data is loaded, prevents infinte looping
       if (!loadedData) {
         const { date, today, nextWeek } = getDates();
-        //set to loaded once data is loaded, prevents infinte looping
-
         // fetch current HE incidents
         const heIncidentsFetch = fetch(HighwaysEnglandUnplannedEvents);
         // fetch current and planned HE roadworks
@@ -148,10 +149,10 @@ export default () => {
     fetchXML();
   }, [loadedData]);
 
+  // fetch client location
   useEffect(() => {
-    // fetch client location
+    // prevent continuous location fetching
     if (clientLocation === null) {
-      // prevent continuous location fetching
       const setCurrentPosition = position =>
         setClientLocation([
           position.coords.latitude,
@@ -176,19 +177,17 @@ export default () => {
   });
 
   // printing data to view in development
-  if (loadedData) {
-    // currently printed twice due to re-render on "DATA LOADED" below, not an issue
-    // console.log(heIncidents.length, heRoadworksCurrent.length, heRoadworksPlanned.length, tflSevere.length, tflCurrent.length, tflPlanned.length)
-    console.log(
-      heIncidents,
-      heRoadworksCurrent,
-      heRoadworksPlanned,
-      tflSevere,
-      tflCurrent,
-      tflPlanned
-    );
-    // console.log(clientLocation)
-  }
+  // if (loadedData) {
+  //   console.log(
+  //     "HE Incidents: ", heIncidents,
+  //     "HE Roadworks Current: ", heRoadworksCurrent,
+  //     "HE Roadworks Planned: ", heRoadworksPlanned,
+  //     "TFL Severe: ", tflSevere,
+  //     "TFL Current: ", tflCurrent,
+  //     "TFL Planned: ", tflPlanned
+  //   );
+  //   // console.log(clientLocation)
+  // }
 
   const handleRouteChange = (direction, value) => {
     if (direction === "to") {
@@ -199,6 +198,15 @@ export default () => {
       setRouteFrom(L.latLng(value[0].latlng[0], value[0].latlng[1]));
     }
   };
+
+  let markers = {
+    heIncidents,
+    heRoadworksCurrent,
+    heRoadworksPlanned,
+    tflSevere,
+    tflCurrent,
+    tflPlanned
+  }
 
   return (
     <div className="App">
@@ -216,6 +224,7 @@ export default () => {
         currentPosition={clientLocation}
         from={routeFrom}
         to={routeTo}
+        markers={markers}
       />
     </div>
   );

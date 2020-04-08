@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Map, TileLayer } from "react-leaflet";
 import { MAPBOX_API_KEY } from '../Keys'
+import Marker from './Marker'
 import Swal from 'sweetalert2'
 import Routing from "./RoutingMachine";
 
-export default ({handleRouteChange, routeMode, setRouteMode, currentPosition, from, to}) => {
+export default ({handleRouteChange, routeMode, setRouteMode, currentPosition, from, to, markers}) => {
   const [position, setPosition] = useState(currentPosition || [53.93,-4.21]) //lat, lon
   const [zoom, setZoom] = useState(7)
   const [isMapInit, setIsMapInit] = useState(false)
   const [map, setMap] = useState(null)
+  const [coordinates, setCoordinates] = useState([])
 
   useEffect(() => {
     setPosition(currentPosition)
@@ -16,8 +18,9 @@ export default ({handleRouteChange, routeMode, setRouteMode, currentPosition, fr
   },[currentPosition])
 
   useEffect(() => {
-    setZoom(1)
-    setPosition([(from.lat + to.lat)/2,(from.lng + to.lng)/2])
+    // setZoom(1)
+    if(from !== null && to !== null)
+      setPosition([(from.lat + to.lat)/2,(from.lng + to.lng)/2])
   },[from, to])
 
   const saveMap = map => {
@@ -44,6 +47,59 @@ export default ({handleRouteChange, routeMode, setRouteMode, currentPosition, fr
     }
   } 
 
+  const ky = 40000 / 360;
+  function arePointsNear(checkPoint, centerPoint, km) {
+    var kx = Math.cos(Math.PI * centerPoint.lat / 180.0) * ky;
+    var dx = Math.abs(centerPoint.lng - checkPoint.lng) * kx;
+    var dy = Math.abs(centerPoint.lat - checkPoint.lat) * ky;
+    return Math.sqrt(dx * dx + dy * dy) <= km;
+  }
+
+  const isPointNear = (point) => {
+    for(let c in coordinates) {
+      if (arePointsNear({lat: coordinates[c].lat, lng: Math.abs(coordinates[c].lng)}, { lat: point.latitude, lng: Math.abs(point.longitude)}, 0.1)) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const mapChildren = (
+    <>
+      <TileLayer
+        attribution="&amp;copy <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> &amp;copy <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>"
+        url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+      />
+      {/* { markers.heIncidents.map((point, index) => { // ADD AN ONCLICK TO THE MARKERS THAT CHANGE THE MAP CENTER AND ZOOM IN ON THEM, however if they are clicking on them then its already on their screen so no point in zooming in? maybe on double click?
+          return  <Marker position={[point.latitude, point.longitude]} key={"key" + point.latitude + point.longitude + index} colour={"red"} point={point}/>
+        })
+      }
+      { markers.heRoadworksCurrent.map((point, index) => {
+          return  <Marker position={[point.latitude, point.longitude]} key={"key" + point.latitude + point.longitude + index} colour={"orange"} point={point}/>
+        })
+      } */}
+      { markers.heRoadworksPlanned.map((point, index) => {
+          return isPointNear(point) ? <Marker position={[point.latitude, point.longitude]} key={"key" + point.latitude + point.longitude + index} colour={"gold"} point={point}/> : null
+        })
+      }
+      {/* { markers.tflSevere.map((point, index) => { 
+          return  <Marker position={[JSON.parse(point.point)[1], JSON.parse(point.point)[0]]} key={point.point + index} colour={"red"} point={point}/>
+        })
+      }
+      { markers.tflCurrent.map((point, index) => { 
+          return  <Marker position={[JSON.parse(point.point)[1], JSON.parse(point.point)[0]]} key={point.point + index} colour={"orange"} point={point}/>
+        })
+      }
+      { markers.tflPlanned.map((point, index) => { 
+          return  <Marker position={[JSON.parse(point.point)[1], JSON.parse(point.point)[0]]} key={point.point + index} colour={"gold"} point={point}/>
+        })
+      } */}
+      {isMapInit && <Routing map={map} from={from} to={to} setCoordinates={setCoordinates}/>}
+    </>
+  )
+
+  // console.log(coordinates)
+
   return (
     routeMode === "none"
     ? <Map 
@@ -53,11 +109,7 @@ export default ({handleRouteChange, routeMode, setRouteMode, currentPosition, fr
         ref={saveMap}
         onClick={handleClick}
       >
-        <TileLayer
-          attribution="&amp;copy <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> &amp;copy <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>" //need to also attribute MapBox!
-          url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-        />
-        {isMapInit && <Routing map={map} from={from} to={to}/>}
+        {mapChildren}
       </Map>
     : <Map 
         className={'map map' + routeMode} 
@@ -67,11 +119,7 @@ export default ({handleRouteChange, routeMode, setRouteMode, currentPosition, fr
         onClick={handleClick}
         onContextMenu={() => setRouteMode("none")}
       >
-        <TileLayer
-          attribution="&amp;copy <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> &amp;copy <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>" //need to also attribute MapBox!
-          url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-        />
-        {isMapInit && <Routing map={map} from={from} to={to}/>}
+        {mapChildren}
       </Map>
   )
 }
