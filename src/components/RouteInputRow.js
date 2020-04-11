@@ -3,7 +3,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import { MAPBOX_API_KEY } from '../Keys'
 import '../styles/RouteInput.css'
 
-export default ({direction, handleRouteChange, routeMode, setRouteMode, locationPicked, setLocationPicked}) => {
+export default function RouteInputRow({direction, handleRouteChange, routeMode, setRouteMode, locationPicked, setLocationPicked}) {
   const [options, setOptions] = useState([])
   const [selected, setSelected] = useState([]) //{text: "Green Wood Court, Southampton...", latlon: [52.34, 0.987]}
 

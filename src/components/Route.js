@@ -1,7 +1,7 @@
 import React from 'react'
 import RouteInputRow from './RouteInputRow';
 
-export default ({handleRouteChange, routeMode, setRouteMode, locationPicked, setLocationPicked}) => {
+export default function Route({handleRouteChange, routeMode, setRouteMode, locationPicked, setLocationPicked}) {
   return (
     <div className='route'>
       <div className='routeInputs'>

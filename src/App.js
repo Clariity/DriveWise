@@ -22,12 +22,12 @@ function getDates() {
     date,
     today,
     nextWeekDate,
-    nextWeek
+    nextWeek,
   };
 }
 
 function convertHeXmlToJson(htmlcollection) {
-  return Array.from(htmlcollection).map(incident =>
+  return Array.from(htmlcollection).map((incident) =>
     Array.from(incident.children).reduce((acc, elem) => {
       let tagName = elem.tagName;
       // Handle multiple tags named category
@@ -39,14 +39,13 @@ function convertHeXmlToJson(htmlcollection) {
   );
 }
 
-export default () => {
+export default function App() {
   const [heIncidents, setHeIncidents] = useState([]); // Red Pins HE
   const [heRoadworksCurrent, setHeRoadworksCurrent] = useState([]); // Orange Pins HE
   const [heRoadworksPlanned, setHeRoadworksPlanned] = useState([]); // Yellow Pins HE
   const [tflSevere, setTflSevere] = useState([]); // Red Pins TFL
   const [tflCurrent, setTflCurrent] = useState([]); // Orange Pins TFL
   const [tflPlanned, setTflPlanned] = useState([]); // Yellow Pins TFL
-  const [loadedData, setLoadedData] = useState(false); // Loading Data Flag to prevent reloads
 
   const [clientLocation, setClientLocation] = useState(null);
   // const [routeFrom, setRouteFrom] = useState(L.latLng(50.94, 0.264822));
@@ -56,125 +55,121 @@ export default () => {
   const [routeMode, setRouteMode] = useState("none");
   const [locationPicked, setLocationPicked] = useState(null);
 
+  // What is the application flow
+  // We need to load the data on page load - this can be done in a single effect on the App component for now
+  // This effect has no dependencies since we only want to load the data one time for now
+
   useEffect(() => {
+    console.log("Start of main effect in App.js");
     async function fetchXML() {
-      //set to loaded once data is loaded, prevents infinte looping
-      if (!loadedData) {
-        const { date, today, nextWeek } = getDates();
-        // fetch current HE incidents
-        const heIncidentsFetch = fetch(HighwaysEnglandUnplannedEvents);
-        // fetch current and planned HE roadworks
-        const heRoadworksFetch = fetch(HighwaysEnglandCurrentEvents);
-        // fetch current TFL disruptions, and current and planned TFL roadworks (default time frame 1 week)
-        const tflFetch = fetch(
-          `${TflDisruption}?startDate=${today}&endDate=${nextWeek}`
-        );
+      console.log("Fetching XML");
+      const { date, today, nextWeek } = getDates();
+      // fetch current HE incidents
+      const heIncidentsFetch = fetch(HighwaysEnglandUnplannedEvents);
+      // fetch current and planned HE roadworks
+      const heRoadworksFetch = fetch(HighwaysEnglandCurrentEvents);
+      // fetch current TFL disruptions, and current and planned TFL roadworks (default time frame 1 week)
+      const tflFetch = fetch(
+        `${TflDisruption}?startDate=${today}&endDate=${nextWeek}`
+      );
 
-        const [
-          heIncidentsResponse,
-          heRoadworksResponse,
-          tflResponse
-        ] = await Promise.all([heIncidentsFetch, heRoadworksFetch, tflFetch]);
+      const [
+        heIncidentsResponse,
+        heRoadworksResponse,
+        tflResponse,
+      ] = await Promise.all([heIncidentsFetch, heRoadworksFetch, tflFetch]);
 
-        const [heIncidentsText, heRoadworksText, tflJson] = await Promise.all([
-          heIncidentsResponse.text(),
-          heRoadworksResponse.text(),
-          tflResponse.json()
-        ]);
+      const [heIncidentsText, heRoadworksText, tflJson] = await Promise.all([
+        heIncidentsResponse.text(),
+        heRoadworksResponse.text(),
+        tflResponse.json(),
+      ]);
 
-        let newTflSevere = [],
-          newTflCurrent = [],
-          newTflPlanned = [];
-        let parser, heIncidentsXml, heRoadworksXml;
+      let newTflSevere = [],
+        newTflCurrent = [],
+        newTflPlanned = [];
+      let parser, heIncidentsXml, heRoadworksXml;
 
-        if (window.DOMParser) {
-          // parse XML
-          parser = new DOMParser();
-          heIncidentsXml = parser.parseFromString(heIncidentsText, "text/xml");
-          heRoadworksXml = parser.parseFromString(heRoadworksText, "text/xml");
-        } else {
-          // Internet Explorer
-          heIncidentsXml = new window.ActiveXObject("Microsoft.XMLDOM");
-          heRoadworksXml = new window.ActiveXObject("Microsoft.XMLDOM");
-          heIncidentsXml.async = false;
-          heRoadworksXml.async = false;
-          heIncidentsXml.loadXML(heIncidentsText);
-          heRoadworksXml.loadXML(heRoadworksText);
-        }
-
-        const incidentItems = heIncidentsXml.getElementsByTagName("item");
-        const newHeIncidents = convertHeXmlToJson(incidentItems);
-
-        const roadworksItems = heRoadworksXml.getElementsByTagName("item");
-        const newRoadworks = convertHeXmlToJson(roadworksItems);
-
-        // partition the new roadworks into current and planned
-        const filter = (elem, startField, endField) =>
-          new Date(elem[startField]) <= date &&
-          date <= new Date(elem[endField]);
-
-        const [
-          newHeRoadworksCurrent,
-          newHeRoadworksPlanned
-        ] = newRoadworks.reduce(
-          ([current, planned], elem) => {
-            return filter(elem, "overallStart", "overallEnd")
-              ? [[...current, elem], planned]
-              : [current, [...planned, elem]];
-          },
-          [[], []]
-        );
-
-        let pushToArray;
-        for (let j = 0; j < tflJson.length; j++) {
-          // loop through tfl data and add to respective arrays, will need to extract data we know we need at a later point, currently keeps everything
-          pushToArray =
-            tflJson[j].severity === "Severe"
-              ? newTflSevere
-              : filter(tflJson[j], "startDateTime", "endDateTime")
-              ? newTflCurrent
-              : newTflPlanned;
-          pushToArray.push(tflJson[j]);
-        }
-
-        setHeIncidents(newHeIncidents);
-        setHeRoadworksCurrent(newHeRoadworksCurrent);
-        setHeRoadworksPlanned(newHeRoadworksPlanned);
-        setTflSevere(newTflSevere);
-        setTflCurrent(newTflCurrent);
-        setTflPlanned(newTflPlanned);
-        setLoadedData(true); //data is now loaded, set to loaded to prevent re-download of data
+      if (window.DOMParser) {
+        // parse XML
+        parser = new DOMParser();
+        heIncidentsXml = parser.parseFromString(heIncidentsText, "text/xml");
+        heRoadworksXml = parser.parseFromString(heRoadworksText, "text/xml");
+      } else {
+        // Internet Explorer
+        heIncidentsXml = new window.ActiveXObject("Microsoft.XMLDOM");
+        heRoadworksXml = new window.ActiveXObject("Microsoft.XMLDOM");
+        heIncidentsXml.async = false;
+        heRoadworksXml.async = false;
+        heIncidentsXml.loadXML(heIncidentsText);
+        heRoadworksXml.loadXML(heRoadworksText);
       }
+
+      const incidentItems = heIncidentsXml.getElementsByTagName("item");
+      const newHeIncidents = convertHeXmlToJson(incidentItems);
+
+      const roadworksItems = heRoadworksXml.getElementsByTagName("item");
+      const newRoadworks = convertHeXmlToJson(roadworksItems);
+
+      // partition the new roadworks into current and planned
+      const filter = (elem, startField, endField) =>
+        new Date(elem[startField]) <= date && date <= new Date(elem[endField]);
+
+      const [
+        newHeRoadworksCurrent,
+        newHeRoadworksPlanned,
+      ] = newRoadworks.reduce(
+        ([current, planned], elem) => {
+          return filter(elem, "overallStart", "overallEnd")
+            ? [[...current, elem], planned]
+            : [current, [...planned, elem]];
+        },
+        [[], []]
+      );
+
+      let pushToArray;
+      for (let j = 0; j < tflJson.length; j++) {
+        // loop through tfl data and add to respective arrays, will need to extract data we know we need at a later point, currently keeps everything
+        pushToArray =
+          tflJson[j].severity === "Severe"
+            ? newTflSevere
+            : filter(tflJson[j], "startDateTime", "endDateTime")
+            ? newTflCurrent
+            : newTflPlanned;
+        pushToArray.push(tflJson[j]);
+      }
+
+      setHeIncidents(newHeIncidents);
+      setHeRoadworksCurrent(newHeRoadworksCurrent);
+      setHeRoadworksPlanned(newHeRoadworksPlanned);
+      setTflSevere(newTflSevere);
+      setTflCurrent(newTflCurrent);
+      setTflPlanned(newTflPlanned);
+      console.log("XML fetched");
     }
     fetchXML();
-  }, [loadedData]);
+    console.log("Main effect complete");
+  }, []);
 
-  // fetch client location
+  // We want to ask for location on initial page load, and never again (for now)
   useEffect(() => {
-    // prevent continuous location fetching
-    if (clientLocation === null) {
-      const setCurrentPosition = position =>
-        setClientLocation([
-          position.coords.latitude,
-          position.coords.longitude
-        ]);
-      const positionError = err => {
-        console.log(err);
+    console.log("Start of geolocation effect in App.js");
+    if (navigator.geolocation) {
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
       };
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          setCurrentPosition,
-          positionError,
-          {
-            enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 0
-          }
-        );
-      }
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => setClientLocation([coords.latitude, coords.longitude]),
+        // For now we will just set null on each code
+        // TODO handle code 1 - denied, code 2 - invalid, code 3 - timeout
+        (error) => setClientLocation(null),
+        options
+      );
     }
-  });
+    console.log("Geolocation effect complete");
+  }, []);
 
   // printing data to view in development
   // if (loadedData) {
@@ -190,11 +185,10 @@ export default () => {
   // }
 
   const handleRouteChange = (direction, value) => {
+    setLocationPicked(value);
     if (direction === "to") {
-      setLocationPicked(value);
       setRouteTo(L.latLng(value[0].latlng[0], value[0].latlng[1]));
     } else {
-      setLocationPicked(value);
       setRouteFrom(L.latLng(value[0].latlng[0], value[0].latlng[1]));
     }
   };
@@ -205,8 +199,8 @@ export default () => {
     heRoadworksPlanned,
     tflSevere,
     tflCurrent,
-    tflPlanned
-  }
+    tflPlanned,
+  };
 
   return (
     <div className="App">

@@ -1,68 +1,113 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Map, TileLayer } from "react-leaflet";
-import { MAPBOX_API_KEY } from '../Keys'
-import Marker from './Marker'
-import Swal from 'sweetalert2'
+import { MAPBOX_API_KEY } from "../Keys";
+import Marker from "./Marker";
+import Swal from "sweetalert2";
 import Routing from "./RoutingMachine";
 
-export default ({handleRouteChange, routeMode, setRouteMode, currentPosition, from, to, markers}) => {
-  const [position, setPosition] = useState(currentPosition || [53.93,-4.21]) //lat, lon
-  const [zoom, setZoom] = useState(7)
-  const [isMapInit, setIsMapInit] = useState(false)
-  const [map, setMap] = useState(null)
-  const [coordinates, setCoordinates] = useState([])
+export default function DrivewiseMap({
+  handleRouteChange,
+  routeMode,
+  setRouteMode,
+  currentPosition,
+  from,
+  to,
+  markers,
+}) {
+  const [position, setPosition] = useState(currentPosition || [53.93, -4.21]); //lat, lon
+  const [zoom, setZoom] = useState(7);
+  const [isMapInit, setIsMapInit] = useState(false);
+  const [map, setMap] = useState(null);
+  const [coordinates, setCoordinates] = useState([]);
 
   useEffect(() => {
-    setPosition(currentPosition)
-    setZoom(15)
-  },[currentPosition])
+    console.log("Start of position and zoom effect in Map.js");
+    setPosition(currentPosition);
+    setZoom(15);
+    console.log("Position and zoom effect complete");
+  }, [currentPosition]);
 
   useEffect(() => {
     // setZoom(1)
-    if(from !== null && to !== null)
-      setPosition([(from.lat + to.lat)/2,(from.lng + to.lng)/2])
-  },[from, to])
+    if (from !== null && to !== null)
+      setPosition([(from.lat + to.lat) / 2, (from.lng + to.lng) / 2]);
+  }, [from, to]);
 
-  const saveMap = map => {
+  const saveMap = (map) => {
     setMap(map);
-    setIsMapInit(true)
-  }
+    setIsMapInit(true);
+  };
 
-  const handleClick = async e => {
-    if(routeMode !== "none") {
-      const clickedLocation = await fetch("https://api.mapbox.com/geocoding/v5/mapbox.places/" + e.latlng.lng + "," + e.latlng.lat + ".json?country=GB&types=address&access_token=" + MAPBOX_API_KEY)
-      const clickedLocationJson = await clickedLocation.json()
-      console.log(clickedLocationJson)
-      if(clickedLocationJson.features.length >=1)
-        handleRouteChange(routeMode, [{text: clickedLocationJson.features[0].place_name, latlng: [e.latlng.lat, e.latlng.lng]}])
+  const handleClick = async (e) => {
+    if (routeMode !== "none") {
+      const clickedLocation = await fetch(
+        "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
+          e.latlng.lng +
+          "," +
+          e.latlng.lat +
+          ".json?country=GB&types=address&access_token=" +
+          MAPBOX_API_KEY
+      );
+      const clickedLocationJson = await clickedLocation.json();
+      console.log(clickedLocationJson);
+      if (clickedLocationJson.features.length >= 1)
+        handleRouteChange(routeMode, [
+          {
+            text: clickedLocationJson.features[0].place_name,
+            latlng: [e.latlng.lat, e.latlng.lng],
+          },
+        ]);
       else {
         Swal.fire({
-          icon: 'error',
-          title: 'No Address Found',
-          text: 'No address found in the selected location, please try a new location.'
-        })
+          icon: "error",
+          title: "No Address Found",
+          text:
+            "No address found in the selected location, please try a new location.",
+        });
       }
     } else {
       //drop a pin / change dropped pin location (maybe always just set as to location?)
     }
-  } 
+  };
 
-  const ky = 40000 / 360;
-  function arePointsNear(checkPoint, centerPoint, km) {
-    var kx = Math.cos(Math.PI * centerPoint.lat / 180.0) * ky;
-    var dx = Math.abs(centerPoint.lng - checkPoint.lng) * kx;
-    var dy = Math.abs(centerPoint.lat - checkPoint.lat) * ky;
-    return Math.sqrt(dx * dx + dy * dy) <= km;
-  }
-
-  const isPointNear = (point) => {
-    for(let c in coordinates) {
-      if (arePointsNear({lat: coordinates[c].lat, lng: Math.abs(coordinates[c].lng)}, { lat: point.latitude, lng: Math.abs(point.longitude)}, 0.1)) {
-        return true
-      }
-    }
-    return false
-  }
+  const plannedRoadworksOnRoute = useMemo(() => {
+    console.log("Recalculating planned on route roadworks with coordinates");
+    console.log(coordinates)
+    return markers.heRoadworksPlanned
+      .filter((point) => {
+        const ky = 40000 / 360;
+        function arePointsNear(checkPoint, centerPoint, km) {
+          var kx = Math.cos((Math.PI * centerPoint.lat) / 180.0) * ky;
+          var dx = Math.abs(centerPoint.lng - checkPoint.lng) * kx;
+          var dy = Math.abs(centerPoint.lat - checkPoint.lat) * ky;
+          return Math.sqrt(dx * dx + dy * dy) <= km;
+        }
+        const isPointNear = (point) => {
+          // console.log(`Checking if coordinates are near point ${point}`);
+          for (let c in coordinates) {
+            if (
+              arePointsNear(
+                { lat: coordinates[c].lat, lng: Math.abs(coordinates[c].lng) },
+                { lat: point.latitude, lng: Math.abs(point.longitude) },
+                0.1
+              )
+            ) {
+              return true;
+            }
+          }
+          return false;
+        };
+        return isPointNear(point);
+      })
+      .map((point, index) => (
+        <Marker
+          position={[point.latitude, point.longitude]}
+          key={"key" + point.latitude + point.longitude + index}
+          colour={"gold"}
+          point={point}
+        />
+      ));
+  }, [coordinates]);
 
   const mapChildren = (
     <>
@@ -78,10 +123,7 @@ export default ({handleRouteChange, routeMode, setRouteMode, currentPosition, fr
           return  <Marker position={[point.latitude, point.longitude]} key={"key" + point.latitude + point.longitude + index} colour={"orange"} point={point}/>
         })
       } */}
-      { markers.heRoadworksPlanned.map((point, index) => {
-          return isPointNear(point) ? <Marker position={[point.latitude, point.longitude]} key={"key" + point.latitude + point.longitude + index} colour={"gold"} point={point}/> : null
-        })
-      }
+      {plannedRoadworksOnRoute}
       {/* { markers.tflSevere.map((point, index) => { 
           return  <Marker position={[JSON.parse(point.point)[1], JSON.parse(point.point)[0]]} key={point.point + index} colour={"red"} point={point}/>
         })
@@ -94,32 +136,39 @@ export default ({handleRouteChange, routeMode, setRouteMode, currentPosition, fr
           return  <Marker position={[JSON.parse(point.point)[1], JSON.parse(point.point)[0]]} key={point.point + index} colour={"gold"} point={point}/>
         })
       } */}
-      {isMapInit && <Routing map={map} from={from} to={to} setCoordinates={setCoordinates}/>}
+      {isMapInit && (
+        <Routing
+          map={map}
+          from={from}
+          to={to}
+          setCoordinates={setCoordinates}
+        />
+      )}
     </>
-  )
+  );
 
   // console.log(coordinates)
 
-  return (
-    routeMode === "none"
-    ? <Map 
-        className={'map map' + routeMode} 
-        center={position} 
-        zoom={zoom} 
-        ref={saveMap}
-        onClick={handleClick}
-      >
-        {mapChildren}
-      </Map>
-    : <Map 
-        className={'map map' + routeMode} 
-        center={position} 
-        zoom={zoom} 
-        ref={saveMap}
-        onClick={handleClick}
-        onContextMenu={() => setRouteMode("none")}
-      >
-        {mapChildren}
-      </Map>
-  )
+  return routeMode === "none" ? (
+    <Map
+      className={"map map" + routeMode}
+      center={position}
+      zoom={zoom}
+      ref={saveMap}
+      onClick={handleClick}
+    >
+      {mapChildren}
+    </Map>
+  ) : (
+    <Map
+      className={"map map" + routeMode}
+      center={position}
+      zoom={zoom}
+      ref={saveMap}
+      onClick={handleClick}
+      onContextMenu={() => setRouteMode("none")}
+    >
+      {mapChildren}
+    </Map>
+  );
 }
