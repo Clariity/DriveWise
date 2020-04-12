@@ -8,6 +8,31 @@
   color: white;
 }
 
+.route-window {
+  width: 20vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.route-input-row {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.map-window {
+  width: 80vw;
+  height: 100vh;
+}
+
+.drivewise-map {
+  width: 100%;
+  height: 100%;
+}
+
 .route {
   min-width: 20vw;
   display: flex;
@@ -30,7 +55,8 @@
   width: 80vw;
 }
 
-.mapto, .mapfrom {
+.mapto,
+.mapfrom {
   cursor: crosshair;
 }
 
