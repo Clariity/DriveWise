@@ -1,3 +1,5 @@
+import { MAPBOX_API_KEY } from "./Keys";
+
 const HighwaysEnglandUnplannedEvents =
   "http://m.highwaysengland.co.uk/feeds/rss/UnplannedEvents.xml";
 
@@ -114,4 +116,18 @@ export default async function fetchRoadworkData() {
     newTflCurrent,
     newTflPlanned,
   ];
+}
+
+export function locationLookup(value) {
+  const uriValue = encodeURIComponent(value);
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${uriValue}.json?country=GB&access_token=${MAPBOX_API_KEY}`;
+
+  return fetch(url).then((results) => results.json());
+}
+
+export function reverseLocationLookup(coords) {
+  const [latitude, longitude] = coords;
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?country=GB&access_token=${MAPBOX_API_KEY}`;
+
+  return fetch(url).then((result) => result.json());
 }

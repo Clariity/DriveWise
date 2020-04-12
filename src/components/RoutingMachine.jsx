@@ -9,9 +9,9 @@ export default function RoutingMachine({ map }) {
   const { state, dispatch } = useContext(StoreContext);
   const [routingControl, setRoutingControl] = useState(null);
 
+  // We use this effect to set up the routing control object and the route selected handler
   useEffect(() => {
     if (map) {
-      console.log("making routing control");
       const control = L.Routing.control({
         waypoints: [],
         router: L.Routing.mapbox(MAPBOX_API_KEY),
@@ -28,11 +28,12 @@ export default function RoutingMachine({ map }) {
       });
 
       control.on("routeselected", ({ route }) => {
-        console.log("Handling route selected");
         dispatch({
           type: ActionType.SET_ROUTE_COORDINATES,
           payload: route.coordinates,
         });
+
+        map.fitBounds([route.waypoints[0].latLng, route.waypoints[1].latLng]);
       });
 
       control.addTo(map);
@@ -41,14 +42,26 @@ export default function RoutingMachine({ map }) {
     }
   }, [map, dispatch]);
 
+  // We use this effect to watch for state changes that affect the router
   useEffect(() => {
-    if (routingControl && state.routeFromLocation && state.routeToLocation) {
-      console.log(state.routeFromLocation);
-
+    // If we have a from and a to location, we set the waypoints in the router
+    if (
+      routingControl &&
+      state.routeFromLocation.length > 0 &&
+      state.routeToLocation.length > 0
+    ) {
       routingControl.setWaypoints([
         state.routeFromLocation[0].center,
         state.routeToLocation[0].center,
       ]);
+      routingControl.route();
+      // Otherwise if either of the locations are missing we clear the router
+    } else if (
+      routingControl &&
+      (state.routeFromLocation.length === 0 ||
+        state.routeToLocation.length === 0)
+    ) {
+      routingControl.setWaypoints([]);
       routingControl.route();
     }
   }, [routingControl, map, state.routeFromLocation, state.routeToLocation]);

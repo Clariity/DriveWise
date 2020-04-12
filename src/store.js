@@ -2,8 +2,8 @@
 import React from "react";
 
 const ActionType = {
-  SET_MAP_CENTER: "SET_MAP_CENTER",
-  SET_MAP_ZOOM: "SET_MAP_ZOOM",
+  SET_USER_LOCATION: "SET_USER_LOCATION",
+  SET_MAP_MODE: "SET_MAP_MODE",
   SET_ROUTE_TO_LOCATION: "SET_ROUTE_TO_LOCATION",
   SET_ROUTE_FROM_LOCATION: "SET_ROUTE_FROM_LOCATION",
   SET_ROUTE_COORDINATES: "SET_ROUTE_COORDINATES",
@@ -16,24 +16,27 @@ const ActionType = {
 };
 
 const intialState = {
-  mapCenter: [52.6386, -1.13169],
-  mapZoom: 8,
-  routeToLocation: null,
-  routeFromLocation: null,
+  userLocation: [52.6386, -1.13169],
+  mapMode: "normal",
+  routeToLocation: [],
+  routeFromLocation: [],
   routeCoordinates: [],
   heIncidents: [],
   heCurrent: [],
   hePlanned: [],
+  tflSevere: [],
+  tflCurrent: [],
+  tflPlanned: [],
 };
 const StoreContext = React.createContext(intialState);
 
 const StateProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer((state, action) => {
     switch (action.type) {
-      case ActionType.SET_MAP_CENTER:
-        return { ...state, mapCenter: action.payload };
-      case ActionType.SET_MAP_ZOOM:
-        return { ...state, mapZoom: action.payload };
+      case ActionType.SET_USER_LOCATION:
+        return { ...state, userLocation: action.payload };
+      case ActionType.SET_MAP_MODE:
+        return { ...state, mapMode: action.payload };
       case ActionType.SET_ROUTE_TO_LOCATION:
         return { ...state, routeToLocation: action.payload };
       case ActionType.SET_ROUTE_FROM_LOCATION:
@@ -46,6 +49,12 @@ const StateProvider = ({ children }) => {
         return { ...state, heCurrent: action.payload };
       case ActionType.SET_HE_PLANNED:
         return { ...state, hePlanned: action.payload };
+      case ActionType.SET_TFL_SEVERE:
+        return { ...state, tflSevere: action.payload };
+      case ActionType.SET_TFL_CURRENT:
+        return { ...state, tflCurrent: action.payload };
+      case ActionType.SET_TFL_PLANNED:
+        return { ...state, tflPlanned: action.payload };
       default:
         break;
     }

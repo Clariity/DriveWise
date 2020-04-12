@@ -24,11 +24,7 @@
   align-items: center;
 }
 
-.use-geolocation-button {
-  margin-right: 5px;
-}
-
-.clear-location-button {
+.route-input-button {
   margin-right: 5px;
 }
 

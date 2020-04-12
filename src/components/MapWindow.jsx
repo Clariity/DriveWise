@@ -31,6 +31,34 @@ function isPointNear(point, coordinates) {
 export default function MapWindow() {
   const { state } = useContext(StoreContext);
 
+  const routeFromMarker =
+    state.routeFromLocation.length > 0 ? (
+      <Marker
+        point={{
+          latitude: state.routeFromLocation[0].center[0],
+          longitude: state.routeFromLocation[0].center[1],
+          title: "state",
+        }}
+        color={"red"}
+      />
+    ) : (
+      <></>
+    );
+
+  const routeToMarker =
+    state.routeToLocation.length > 0 ? (
+      <Marker
+        point={{
+          latitude: state.routeToLocation[0].center[0],
+          longitude: state.routeToLocation[0].center[1],
+          title: "state",
+        }}
+        color={"red"}
+      />
+    ) : (
+      <></>
+    );
+
   // We make sure to only recompute the route roadworks when the coordinates (aka the route) changes
   const routeRoadworks = useMemo(() => {
     console.log("Recalculating route roadworks");
@@ -46,6 +74,8 @@ export default function MapWindow() {
     <div className="map-window">
       <Map>
         <RoutingMachine />
+        {routeFromMarker}
+        {routeToMarker}
         {routeRoadworks.map((roadwork) => (
           <Marker key={roadwork.guid} point={roadwork} color={"gold"} />
         ))}

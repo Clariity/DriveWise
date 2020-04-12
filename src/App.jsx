@@ -17,6 +17,9 @@ export default function App() {
       dispatch({ type: ActionType.SET_HE_INCIDENTS, payload: data[0] });
       dispatch({ type: ActionType.SET_HE_CURRENT, payload: data[1] });
       dispatch({ type: ActionType.SET_HE_PLANNED, payload: data[2] });
+      dispatch({ type: ActionType.SET_TFL_SEVERE, payload: data[3] });
+      dispatch({ type: ActionType.SET_TFL_CURRENT, payload: data[4] });
+      dispatch({ type: ActionType.SET_TFL_PLANNED, payload: data[5] });
     });
     // React guarantees that dispatch is always the same, so we can put it in the deps array
     // to appease the linter and safely know it will never refire the effect
@@ -26,10 +29,9 @@ export default function App() {
   useEffect(() => {
     if (locationError === null && location.length > 0) {
       dispatch({
-        type: ActionType.SET_MAP_CENTER,
+        type: ActionType.SET_USER_LOCATION,
         payload: location,
       });
-      dispatch({ type: ActionType.SET_MAP_ZOOM, payload: 12 });
     }
     // React guarantees that dispatch is always the same, so we can put it in the deps array
     // to appease the linter and safely know it will never refire the effect

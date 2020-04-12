@@ -1,16 +1,15 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { StoreContext, ActionType } from "../store";
-import { MAPBOX_API_KEY } from "../Keys";
+import { locationLookup, reverseLocationLookup } from "../data";
 import "../styles/RouteInput.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
-import { useGeolocation } from "../hooks";
 
 export default function RouteInputRow({ direction }) {
   const [options, setOptions] = useState([]);
   const { state, dispatch } = useContext(StoreContext);
-  const [userLocation, locationError] = useGeolocation();
 
+  // Remove focus from input
   useEffect(() => {
     document.activeElement.blur();
   }, []);
@@ -25,11 +24,7 @@ export default function RouteInputRow({ direction }) {
   function handleInputChange(value) {
     // Only fire search after 4 characters
     if (value.length >= 4) {
-      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-        value
-      )}.json?country=GB&access_token=${MAPBOX_API_KEY}`;
-      fetch(url)
-        .then((results) => results.json())
+      locationLookup(value)
         .then((json) =>
           json.features.map((option) => ({
             text: option.place_name,
@@ -43,27 +38,34 @@ export default function RouteInputRow({ direction }) {
   }
 
   function handleSelectedChange(value) {
-    console.log(value);
     // Update the store with the selected location for the route
-    const location = value.length > 0 ? [value[0]] : null;
+    const location = value.length > 0 ? [value[0]] : [];
     dispatch({ type, payload: location });
   }
 
   function handleGeolocationButton() {
-    const [latitude, longitude] = userLocation;
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?country=GB&access_token=${MAPBOX_API_KEY}`;
-    fetch(url)
-      .then((result) => result.json())
-      .then((json) => {
-        console.log(json);
-        if (json.features.length >= 1) {
-          const value = {
-            text: json.features[0].place_name,
-            center: userLocation,
-          };
-          handleSelectedChange([value]);
-        }
-      });
+    reverseLocationLookup(state.userLocation).then((json) => {
+      if (json.features.length >= 1) {
+        const value = {
+          text: json.features[0].place_name,
+          center: state.userLocation,
+        };
+        dispatch({ type, payload: [value] });
+      }
+    });
+  }
+
+  function handleAddLocation() {
+    dispatch({
+      type: ActionType.SET_MAP_MODE,
+      payload: `select-${direction}`,
+    });
+  }
+
+  function handleClearLocation() {
+    dispatch({ type, payload: [] });
+    // We need to remember to clear the coordinates here so the markers are removed
+    dispatch({ type: ActionType.SET_ROUTE_COORDINATES, payload: [] });
   }
 
   return (
@@ -84,14 +86,20 @@ export default function RouteInputRow({ direction }) {
       />
       <div className="button-group">
         <button
-          className="use-geolocation-button"
+          className="route-input-button"
           onClick={() => handleGeolocationButton()}
         >
           <i className="material-icons">gps_fixed</i>
         </button>
         <button
-          className="clear-location-button"
-          onClick={() => handleSelectedChange([])}
+          className="route-input-button"
+          onClick={() => handleAddLocation()}
+        >
+          <i className="material-icons">add_location</i>
+        </button>
+        <button
+          className="route-input-button"
+          onClick={() => handleClearLocation()}
         >
           <i className="material-icons">clear</i>
         </button>
