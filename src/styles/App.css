@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
   background-color: #282c34;
   min-height: 100vh;
@@ -6,6 +6,16 @@
   flex-direction: row;
   font-size: calc(10px + 2vmin);
   color: white;
+} */
+
+.App {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: row;
+
+  text-align: center;
+  background-color: #282c34;
 }
 
 .route-window {
@@ -14,13 +24,6 @@
 
   display: flex;
   flex-direction: column;
-}
-
-.route-input-row {
-  width: 100%;
-
-  display: flex;
-  flex-direction: row;
 }
 
 .map-window {
@@ -33,7 +36,7 @@
   height: 100%;
 }
 
-.route {
+/* .route {
   min-width: 20vw;
   display: flex;
   flex-direction: column;
@@ -92,4 +95,4 @@
   .route {
     flex-direction: column;
   }
-}
+} */

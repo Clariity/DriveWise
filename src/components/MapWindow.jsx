@@ -2,7 +2,7 @@ import React, { useMemo, useContext } from "react";
 import Map from "./Map";
 import Marker from "./Marker";
 import RoutingMachine from "./RoutingMachine";
-import { StoreContext, ActionType } from "../store";
+import { StoreContext } from "../store";
 
 const ky = 40000 / 360;
 
@@ -47,7 +47,7 @@ export default function MapWindow() {
       <Map>
         <RoutingMachine />
         {routeRoadworks.map((roadwork) => (
-          <Marker key={roadwork.guid} point={roadwork} />
+          <Marker key={roadwork.guid} point={roadwork} color={"gold"} />
         ))}
       </Map>
     </div>
