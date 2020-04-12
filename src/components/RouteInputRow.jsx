@@ -68,6 +68,13 @@ export default function RouteInputRow({ direction }) {
     dispatch({ type: ActionType.SET_ROUTE_COORDINATES, payload: [] });
   }
 
+  function getBlurClassName() {
+    if (direction === "to")
+      return state.mapMode === "select-to" ? "route-input-button unblur" : "route-input-button"
+    else 
+      return state.mapMode === "select-from" ? "route-input-button unblur" : "route-input-button"
+  }
+
   return (
     <div className="route-input-row">
       <Typeahead
@@ -92,7 +99,7 @@ export default function RouteInputRow({ direction }) {
           <i className="material-icons">gps_fixed</i>
         </button>
         <button
-          className="route-input-button"
+          className={getBlurClassName()}
           onClick={() => handleAddLocation()}
         >
           <i className="material-icons">add_location</i>

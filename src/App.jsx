@@ -5,6 +5,7 @@ import { StoreContext, ActionType } from "./store";
 import fetchRoadworksData from "./data";
 import { useGeolocation } from "./hooks";
 import "./styles/App.css";
+import "./styles/Responsive.css";
 import "leaflet/dist/leaflet.css";
 
 export default function App() {

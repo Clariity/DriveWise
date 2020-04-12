@@ -1,0 +1,68 @@
+@media (max-width: 1600px) {
+  .route-input-row {
+    flex-direction: column;
+  }
+  .button-group {
+    margin: 0px 5px;
+  }
+  .route-input-button {
+    width: 100%;
+    margin-top: 5px;
+  }
+  .location-input {
+    width: unset;
+    height: 40px;
+  }
+  .route-input-button:first-child {
+    margin-left: unset;
+  }
+  .route-input-button:last-child {
+    margin-right: unset;
+  }
+}
+
+@media (max-width: 1200px) {
+  .App {
+    flex-direction: column;
+  }
+  .route-window {
+    width: 100%;
+    height: 100%;
+    min-height: 20vh;
+    flex-direction: row;
+    order: 2;
+  }
+  .map-window {
+    width: 100%;
+    max-height: 80vh;
+    order: 1;
+  }
+  .blur {
+    min-width: 100%;
+    height: 100%;
+  }
+
+  .route-input-group {
+    width: 50vw;
+    height: calc(20vh);
+  }
+  .route-info, .route-mode-info {
+    width: 50vw;
+    min-height: calc(20vh - 20px);
+  }
+}
+
+@media (max-width: 800px) {
+  .route-window {
+    flex-direction: column;
+  }
+
+  .route-input-group {
+    width: calc(100%);
+    height: 100%;
+  }
+  .route-info, .route-mode-info {
+    min-width: calc(100% - 20px);
+    width: calc(100vw - 38px);
+  }
+}

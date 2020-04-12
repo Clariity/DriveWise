@@ -1,15 +1,16 @@
 .route-input-row {
   width: 100%;
-
   display: flex;
   flex-direction: row;
-
   margin-top: 5px;
+}
+
+.route-input-row:last-child {
+  margin-top: 10px;
 }
 
 .location-input {
   width: calc(100% - 20px);
-
   margin: 0px 5px;
 }
 
@@ -28,18 +29,18 @@
   margin-right: 5px;
 }
 
-.clearSelected,
-.selectLocation {
+.route-input-button {
   min-width: 40px;
   height: 40px;
   border-radius: 0.25rem;
   border-style: none;
   background-color: #fff;
   margin-left: 5px;
+  display: flex;  
+  justify-content: center;
 }
 
-.clearSelected:hover,
-.selectLocation:hover {
+.route-input-button:hover {
   cursor: pointer;
   background-color: rgb(226, 226, 226);
 }
@@ -56,8 +57,9 @@
 
 .rbt-input-main {
   width: 100%;
+  height: 100%;
   font-family: "Roboto", sans-serif;
-  font-size: 1rem;
+  font-size: 1.5rem;
   padding: 5px;
   border-radius: 0.25rem;
   border-style: none;
@@ -65,7 +67,7 @@
 
 .rbt-input-hint {
   font-family: "Roboto", sans-serif;
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 .dropdown-menu,
@@ -74,7 +76,7 @@
   border: 1px solid #282c34;
   margin: 0.1875rem 0 0;
   font-family: "Roboto", sans-serif;
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: #000 !important;
   text-align: left;
   background-color: #fff;
@@ -110,87 +112,59 @@
   width: 34px;
 }
 
-/* .routeInputs {
-  width: calc(100% - 20px);
+.route-input-group {
   padding: 10px;
+  padding-bottom: 0px;
   position: relative;
 }
 
-.routeInputRow {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-top: 5px;
-}
-
-.button-row {
-  display: flex;
-  flex-direction: row;
-}
-
-
-
-@media (max-width: 1600px) {
-  .routeInputRow {
-    flex-direction: column;
-  }
-  .clearSelected, .selectLocation {
-    width: 100%;
-    margin-top: 5px;
-  }
-  .selectLocation {
-    margin-left: unset;
-  }
-}
-
-@media (max-width: 1200px) {
-  .routeInputs {
-    width: 50vw;
-  }
-  .routeInfo, .routeModeInfo {
-    width: 50vw !important;
-    max-width: calc(50vw - 46px) !important;
-    min-height: calc(20vh - 46px) !important;
-  }
-}
-
-@media (max-width: 800px) {
-  .routeInputs {
-    width: calc(100vw - 38px);
-  }
-  .routeInfo, .routeModeInfo {
-    min-width: calc(100% - 46px);
-    width: calc(100vw - 38px);
-  }
-}
-
-.routeInfo {
-  width: 20vw;
-  max-width: calc(20vw - 46px);
+.route-info {
   height: 100%;
   border-style: solid;
   border-color: white;
+  border-width: 2px;
   margin: 10px;
   padding: 10px;
   font-family: 'Roboto', sans-serif;
-  font-size: 1rem;
+  font-size: 1.5rem;
+  color: white;
   justify-content: center;
 }
 
-.routeModeInfo {
-  width: 20vw;
-  max-width: calc(20vw - 46px);
+.route-mode-info {
   height: 100%;
   border-style: dashed;
   border-color: white;
+  border-width: 2px;
   margin: 10px;
   padding: 10px;
   z-index: 101;
   font-family: 'Roboto', sans-serif;
-  font-size: 1rem;
+  font-size: 1.5rem;
+  color: white;
   justify-content: center;
 }
 
+.blur {
+  background-color: #000000;
+  opacity: 0.7;
+  position: absolute;
+  width: 20vw;
+  max-width: 20vw;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.unblur {
+  z-index: 101;
+}
+
+#crosshairs {
+  cursor: crosshair;
+}
+
 p {
-  line-height: 1.5rem;
-} */
+  line-height: 2rem;
+}

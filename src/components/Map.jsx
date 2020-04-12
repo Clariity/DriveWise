@@ -39,6 +39,10 @@ export default function Map({ children }) {
                 center: coords,
               };
               dispatch({ type, payload: [value] });
+              dispatch({
+                type: ActionType.SET_MAP_MODE,
+                payload: "normal",
+              });
             }
           });
         }
@@ -53,7 +57,7 @@ export default function Map({ children }) {
   );
 
   return (
-    <div className="drivewise-map" ref={mapRef}>
+    <div id={state.mapMode !== "normal" ? "crosshairs" : null} className="drivewise-map" ref={mapRef}>
       {childrenWithMap}
     </div>
   );
