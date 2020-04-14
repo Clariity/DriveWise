@@ -34,7 +34,7 @@
   }
   .map-window {
     width: 100%;
-    max-height: 80vh;
+    height: calc(80vh - 60px);
     order: 1;
   }
   .blur {
@@ -49,12 +49,16 @@
   .route-info, .route-mode-info {
     width: 50vw;
     min-height: calc(20vh - 20px);
+    margin-top: 10px;
   }
 }
 
 @media (max-width: 800px) {
   .route-window {
     flex-direction: column;
+  }
+  .blur {
+    height: calc(100% - 5px);
   }
 
   .route-input-group {
@@ -64,5 +68,6 @@
   .route-info, .route-mode-info {
     min-width: calc(100% - 20px);
     width: calc(100vw - 38px);
+    margin-top: 0px;
   }
 }

@@ -7,6 +7,7 @@
 
 .route-input-row:last-child {
   margin-top: 10px;
+  margin-bottom: 5px;
 }
 
 .location-input {
@@ -114,31 +115,25 @@
 
 .route-input-group {
   padding: 10px;
-  padding-bottom: 0px;
+  /* padding-bottom: 0px; */
   position: relative;
 }
 
 .route-info {
-  height: 100%;
   border-style: solid;
-  border-color: white;
-  border-width: 2px;
-  margin: 10px;
-  padding: 10px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.5rem;
-  color: white;
-  justify-content: center;
 }
 
 .route-mode-info {
-  height: 100%;
   border-style: dashed;
+}
+
+.route-info, .route-mode-info {
+  height: 100%;
   border-color: white;
   border-width: 2px;
   margin: 10px;
+  margin-top: 0px;
   padding: 10px;
-  z-index: 101;
   font-family: 'Roboto', sans-serif;
   font-size: 1.5rem;
   color: white;
@@ -151,7 +146,7 @@
   position: absolute;
   width: 20vw;
   max-width: 20vw;
-  height: 100%;
+  height: calc(100% - 5px);
   top: 0;
   left: 0;
   z-index: 100;

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import AppBar from "./components/AppBar";
 import RouteWindow from "./components/RouteWindow";
 import MapWindow from "./components/MapWindow";
 import { StoreContext, ActionType } from "./store";
@@ -40,9 +41,12 @@ export default function App() {
   }, [dispatch, location, locationError]);
 
   return (
-    <div className="App">
-      <RouteWindow />
-      <MapWindow />
+    <div className='app-container'>
+      <AppBar />
+      <div className="App">
+        <RouteWindow />
+        <MapWindow />
+      </div>
     </div>
   );
 }

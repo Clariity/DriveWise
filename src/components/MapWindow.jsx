@@ -39,7 +39,7 @@ export default function MapWindow() {
           longitude: state.routeFromLocation[0].center[1],
           title: "state",
         }}
-        color={"red"}
+        color={"blue"}
       />
     ) : (
       <></>
@@ -53,7 +53,7 @@ export default function MapWindow() {
           longitude: state.routeToLocation[0].center[1],
           title: "state",
         }}
-        color={"red"}
+        color={"blue"}
       />
     ) : (
       <></>

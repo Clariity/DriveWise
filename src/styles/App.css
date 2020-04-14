@@ -1,22 +1,29 @@
 .App {
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
   display: flex;
   flex-direction: row;
   text-align: center;
-  background-color: #282c34;
+  /* background-color: #282c34; */
+  background-color: #2d89ef;
+
+}
+
+.app-bar {
+  background-color: #ef772d;
+  display: flex;
+  align-items: center;
+  font-family: 'Pacifico', cursive;
+  color: white;
 }
 
 .route-window {
   width: 20vw;
-  height: 100vh;
-
   display: flex;
   flex-direction: column;
 }
 
 .map-window {
   width: 80vw;
-  height: 100vh;
 }
 
 .drivewise-map {
@@ -24,9 +31,6 @@
   height: 100%;
 }
 
-/*
-.mapto,
-.mapfrom {
-  cursor: crosshair;
+.leaflet-routing-container {
+  display: none;
 }
-*/

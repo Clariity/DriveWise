@@ -26,7 +26,7 @@ export default function RouteWindow() {
         : <div onClick={setNormalMapMode} className="route-mode-info">
             <h1>Route Select Mode: {state.mapMode === "select-to" ? " Destination" : " Starting Point"}</h1>
              <p>Click a location on the map to select it as your {state.mapMode === "select-to" ? "destination" : "starting point"}.</p>
-             <p>To exit Route Select Mode, click within the dotted section here.</p> 
+             <p>To exit Route Select Mode, click within the dashed section here.</p> 
           </div>
       }
     </div>
