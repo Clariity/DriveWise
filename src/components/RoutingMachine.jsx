@@ -19,7 +19,7 @@ export default function RoutingMachine({ map }) {
         lineOptions: {
           styles: [
             {
-              color: "blue",
+              color: "#2d89ef",
               opacity: 1,
               weight: 5,
             },
