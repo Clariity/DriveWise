@@ -58,7 +58,7 @@ export default function RouteInputRow({ direction }) {
   function handleAddLocation() {
     dispatch({
       type: ActionType.SET_MAP_MODE,
-      payload: `select-${direction}`,
+      payload: state.mapMode === "normal" ? `select-${direction}` : "normal"
     });
   }
 

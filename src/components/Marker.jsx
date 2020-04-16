@@ -14,9 +14,23 @@ export default function Marker({ map, point, color }) {
       icon,
     });
 
+    const startDateTime = new Date(point.overallStart)
+    const endDateTime = new Date(point.overallEnd)
+
     if (map) {
       marker.addTo(map);
-      marker.bindPopup(point.title);
+      marker.bindPopup(
+        point.startEndTitle ||
+        `<b>${point.title}</b> <br>
+        ${point.category1} - ${point.category2} <br>
+        Start: ${startDateTime} <br>
+        End: ${endDateTime} <br><br>
+        Technical Details: <br>
+        Author: ${point.author} <br>
+        GUID: ${point.guid} <br>
+        Link: <a href="${point.link}" target="_blank" rel="noopener noreferrer">${point.link}</a> <br>
+        Reference: ${point.reference}`
+      );
     }
 
     return () => map.removeLayer(marker);
@@ -27,16 +41,16 @@ export default function Marker({ map, point, color }) {
 //   return (
 //     <Marker position={position} icon={icon}>
 //       <Popup>
-//         <b>{point.title}</b> <br />
-//         {point.category1} - {point.category2} <br />
-//         Description: {point.description} <br />
-//         Start: {point.overallStart} <br />
-//         End: {point.overallEnd} <br />
-//         Technical Details: <br />
-//         Author: {point.author} <br />
-//         GUID: {point.guid} <br />
-//         link: {point.link} <br />
-//         reference {point.reference}
+        // <b>{point.title}</b> <br />
+        // {point.category1} - {point.category2} <br />
+        // Description: {point.description} <br />
+        // Start: {point.overallStart} <br />
+        // End: {point.overallEnd} <br />
+        // Technical Details: <br />
+        // Author: {point.author} <br />
+        // GUID: {point.guid} <br />
+        // link: {point.link} <br />
+        // reference {point.reference}
 //       </Popup>
 //     </Marker>
 //   )

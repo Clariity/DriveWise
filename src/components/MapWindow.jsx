@@ -1,4 +1,5 @@
 import React, { useMemo, useContext } from "react";
+import LocationMarker from "./LocationMarker"
 import Map from "./Map";
 import Marker from "./Marker";
 import RoutingMachine from "./RoutingMachine";
@@ -31,13 +32,23 @@ function isPointNear(point, coordinates) {
 export default function MapWindow() {
   const { state } = useContext(StoreContext);
 
+  function isMarkerOnLocation() {
+    if (state.routeFromLocation.length > 0)
+      if(state.routeFromLocation[0].center[0] === state.userLocation[0] && state.routeFromLocation[0].center[1] === state.userLocation[1])
+        return true
+    if (state.routeToLocation.length > 0)
+      if(state.routeToLocation[0].center[0] === state.userLocation[0] && state.routeToLocation[0].center[1] === state.userLocation[1])
+        return true
+    return false
+  }
+
   const routeFromMarker =
     state.routeFromLocation.length > 0 ? (
       <Marker
         point={{
           latitude: state.routeFromLocation[0].center[0],
           longitude: state.routeFromLocation[0].center[1],
-          title: "state",
+          startEndTitle: "<b>Starting Point: </b>" + state.routeFromLocation[0].text
         }}
         color={"blue"}
       />
@@ -51,13 +62,23 @@ export default function MapWindow() {
         point={{
           latitude: state.routeToLocation[0].center[0],
           longitude: state.routeToLocation[0].center[1],
-          title: "state",
+          startEndTitle: "<b>Destination: </b>" + state.routeToLocation[0].text
         }}
         color={"blue"}
       />
     ) : (
       <></>
     );
+
+  const locationMarker = 
+    !isMarkerOnLocation() ? (
+      <LocationMarker 
+        point={{
+          latitude: state.userLocation[0],
+          longitude: state.userLocation[1]
+        }}
+      />
+    ) : <></>
 
   // We make sure to only recompute the route roadworks when the coordinates (aka the route) changes
   const routeRoadworks = useMemo(() => {
@@ -74,10 +95,11 @@ export default function MapWindow() {
     <div className="map-window">
       <Map>
         <RoutingMachine />
+        {locationMarker}
         {routeFromMarker}
         {routeToMarker}
         {routeRoadworks.map((roadwork) => (
-          <Marker key={roadwork.guid} point={roadwork} color={"gold"} />
+          <Marker key={roadwork.guid} point={roadwork} color={"orange"} />
         ))}
       </Map>
     </div>
