@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import RouteInputRow from "./RouteInputRow";
 import { StoreContext, ActionType } from "../store";
+import DatePicker from "./DatePicker";
 
 export default function RouteWindow() {
   const { state, dispatch } = useContext(StoreContext);
@@ -14,10 +15,17 @@ export default function RouteWindow() {
 
   return (
     <div className="route-window">
-      <div className="route-input-group">
-        { state.mapMode !== "normal" && <div className="blur"/> }
-        <RouteInputRow direction="from" />
-        <RouteInputRow direction="to" />
+      <div className="route-inputs">
+        <div className="route-input-group">
+          { state.mapMode !== "normal" && <div className="blur"/> }
+          <RouteInputRow direction="from" />
+          <RouteInputRow direction="to" />
+        </div>
+        <div className="route-input-group date-input-group">
+          { state.mapMode !== "normal" && <div className="blur"/> }
+          <DatePicker dateType="Start" />
+          <DatePicker dateType="End" />
+        </div>
       </div>
       { state.mapMode === "normal"
         ? <div className="route-info">

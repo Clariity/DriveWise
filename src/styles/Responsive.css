@@ -21,7 +21,7 @@
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1279px) {
   .App {
     flex-direction: column;
   }
@@ -29,7 +29,7 @@
     width: 100%;
     height: 100%;
     min-height: 20vh;
-    flex-direction: row;
+    flex-direction: column;
     order: 2;
   }
   .map-window {
@@ -42,32 +42,41 @@
     height: 100%;
   }
 
+  .route-inputs {
+    flex-direction: row;
+  }
   .route-input-group {
     width: 50vw;
-    height: calc(20vh);
+  }
+  .date-input-group {
+    padding-top: 10px;
+    flex-direction: column;
   }
   .route-info, .route-mode-info {
-    width: 50vw;
+    width: calc(100vw - 40px);
     min-height: calc(20vh - 20px);
-    margin-top: 10px;
+    margin-top: 5px;
+  }
+  .react-datepicker__triangle {
+    transform: translate3d(70px, 0px, 0px);
+  }
+  .react-datepicker__triangle::before {
+    display: none;
   }
 }
 
 @media (max-width: 800px) {
-  .route-window {
-    flex-direction: column;
-  }
-  .blur {
-    height: calc(100% - 5px);
-  }
-
   .route-input-group {
     width: calc(100%);
-    height: 100%;
   }
   .route-info, .route-mode-info {
     min-width: calc(100% - 20px);
     width: calc(100vw - 38px);
-    margin-top: 0px;
+  }
+}
+
+@media (max-width: 600px) {
+  .route-inputs {
+    flex-direction: column;
   }
 }

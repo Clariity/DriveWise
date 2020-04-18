@@ -1,11 +1,15 @@
 // https://blog.logrocket.com/use-hooks-and-context-not-react-and-redux/
 import React from "react";
 
+const date = new Date();
+
 const ActionType = {
   SET_USER_LOCATION: "SET_USER_LOCATION",
   SET_MAP_MODE: "SET_MAP_MODE",
   SET_ROUTE_TO_LOCATION: "SET_ROUTE_TO_LOCATION",
   SET_ROUTE_FROM_LOCATION: "SET_ROUTE_FROM_LOCATION",
+  SET_START_DATE: "SET_START_DATE",
+  SET_END_DATE: "SET_END_DATE",
   SET_ROUTE_COORDINATES: "SET_ROUTE_COORDINATES",
   SET_HE_INCIDENTS: "SET_HE_INCIDENTS",
   SET_HE_CURRENT: "SET_HE_CURRENT",
@@ -20,6 +24,8 @@ const intialState = {
   mapMode: "normal",
   routeToLocation: [],
   routeFromLocation: [],
+  startDate: date,
+  endDate: new Date(date.getTime() + 7 * 24 * 60 * 60 * 1000),
   routeCoordinates: [],
   heIncidents: [],
   heCurrent: [],
@@ -41,6 +47,10 @@ const StateProvider = ({ children }) => {
         return { ...state, routeToLocation: action.payload };
       case ActionType.SET_ROUTE_FROM_LOCATION:
         return { ...state, routeFromLocation: action.payload };
+      case ActionType.SET_START_DATE:
+        return { ...state, startDate: action.payload };
+      case ActionType.SET_END_DATE:
+        return { ...state, endDate: action.payload };
       case ActionType.SET_ROUTE_COORDINATES:
         return { ...state, routeCoordinates: action.payload };
       case ActionType.SET_HE_INCIDENTS:

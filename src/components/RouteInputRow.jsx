@@ -41,6 +41,9 @@ export default function RouteInputRow({ direction }) {
     // Update the store with the selected location for the route
     const location = value.length > 0 ? [value[0]] : [];
     dispatch({ type, payload: location });
+    // We need to remember to clear the coordinates here so the markers are removed
+    if (value.length === 0)
+      dispatch({ type: ActionType.SET_ROUTE_COORDINATES, payload: [] });
   }
 
   function handleGeolocationButton() {
@@ -60,12 +63,6 @@ export default function RouteInputRow({ direction }) {
       type: ActionType.SET_MAP_MODE,
       payload: state.mapMode === "normal" ? `select-${direction}` : "normal"
     });
-  }
-
-  function handleClearLocation() {
-    dispatch({ type, payload: [] });
-    // We need to remember to clear the coordinates here so the markers are removed
-    dispatch({ type: ActionType.SET_ROUTE_COORDINATES, payload: [] });
   }
 
   function getBlurClassName() {
@@ -90,6 +87,7 @@ export default function RouteInputRow({ direction }) {
         autoFocus={true}
         selectHintOnEnter={true}
         minLength={4}
+        clearButton={true}
       />
       <div className="button-group">
         <button
@@ -103,12 +101,6 @@ export default function RouteInputRow({ direction }) {
           onClick={() => handleAddLocation()}
         >
           <i className="material-icons">add_location</i>
-        </button>
-        <button
-          className="route-input-button"
-          onClick={() => handleClearLocation()}
-        >
-          <i className="material-icons">clear</i>
         </button>
       </div>
     </div>
