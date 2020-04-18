@@ -16,18 +16,21 @@ export default function RoutingMachine({ map }) {
         waypoints: [],
         router: L.Routing.mapbox(MAPBOX_API_KEY),
         show: false,
+        showAlternatives: true,
         lineOptions: {
           styles: [
-            {
-              color: "#2d89ef",
-              opacity: 1,
-              weight: 5,
-            },
+            { color: "#2d89ef", opacity: 1, weight: 5 }
           ],
         },
+        altLineOptions: {
+          styles: [
+            { color: 'grey', opacity: 1, weight: 5 }
+          ]
+        }
       });
 
       control.on("routeselected", ({ route }) => {
+        //console.log(route.instructions) Could potentially do something with the instructions
         dispatch({
           type: ActionType.SET_ROUTE_COORDINATES,
           payload: route.coordinates,
