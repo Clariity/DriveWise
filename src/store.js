@@ -17,6 +17,8 @@ const ActionType = {
   SET_TFL_SEVERE: "SET_TFL_SEVERE",
   SET_TFL_CURRENT: "SET_TFL_CURRENT",
   SET_TFL_PLANNED: "SET_TFL_PLANNED",
+  SET_MARKER_INFO: "SET_MARKER_INFO",
+  SET_MAP_REFERENCE: "SET_MAP_REFERENCE"
 };
 
 const intialState = {
@@ -33,6 +35,8 @@ const intialState = {
   tflSevere: [],
   tflCurrent: [],
   tflPlanned: [],
+  markerInfo: [],
+  mapReference: null
 };
 const StoreContext = React.createContext(intialState);
 
@@ -65,6 +69,10 @@ const StateProvider = ({ children }) => {
         return { ...state, tflCurrent: action.payload };
       case ActionType.SET_TFL_PLANNED:
         return { ...state, tflPlanned: action.payload };
+      case ActionType.SET_MARKER_INFO:
+        return { ...state, markerInfo: action.payload };
+      case ActionType.SET_MAP_REFERENCE:
+        return { ...state, mapReference: action.payload };
       default:
         break;
     }

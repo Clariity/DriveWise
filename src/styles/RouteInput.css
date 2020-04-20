@@ -89,6 +89,7 @@
   display: flex !important;
   flex-direction: column;
   z-index: 100;
+  max-height: unset !important;
 }
 
 .dropdown-item {
@@ -126,6 +127,7 @@
 
 .route-info {
   border-style: solid;
+  overflow-y: auto;
 }
 
 .route-mode-info {

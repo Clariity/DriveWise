@@ -1,9 +1,9 @@
-import React, { useMemo, useContext } from "react";
+import React, { useMemo, useContext, useEffect } from "react";
 import LocationMarker from "./LocationMarker"
 import Map from "./Map";
 import Marker from "./Marker";
 import RoutingMachine from "./RoutingMachine";
-import { StoreContext } from "../store";
+import { ActionType, StoreContext } from "../store";
 
 const ky = 40000 / 360;
 
@@ -30,7 +30,7 @@ function isPointNear(point, coordinates) {
 }
 
 export default function MapWindow() {
-  const { state } = useContext(StoreContext);
+  const { state, dispatch } = useContext(StoreContext);
 
   function isMarkerOnLocation() {
     if (state.routeFromLocation.length > 0)
@@ -90,6 +90,16 @@ export default function MapWindow() {
       return isPointNear(point, coordinates);
     });
   }, [state.routeCoordinates, state.heCurrent]);
+
+  // Updating any marker information when the filtered roadworks array changes
+  useEffect(() => {
+    // TODO: order routeRoadworks by date first (if not done already)
+    // Note: This will need to be changed when more than heCurrent is added, a color needs to be passed as well so we can set the appropriate pin colour to be displayed in the route info section, currently is just manually showing orange
+    dispatch({
+      type: ActionType.SET_MARKER_INFO,
+      payload: routeRoadworks,
+    });
+  }, [dispatch, routeRoadworks])
 
   return (
     <div className="map-window">

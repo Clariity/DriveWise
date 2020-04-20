@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import RouteInputRow from "./RouteInputRow";
 import { StoreContext, ActionType } from "../store";
 import DatePicker from "./DatePicker";
+import MarkerInfo from "./MarkerInfo";
 
 export default function RouteWindow() {
   const { state, dispatch } = useContext(StoreContext);
@@ -29,7 +30,10 @@ export default function RouteWindow() {
       </div>
       { state.mapMode === "normal"
         ? <div className="route-info">
-            <h1>Journey, Incident and Road Work Information Will Go Here</h1>
+            {state.markerInfo.length === 0 && <p>Once a route has been selected, any identified incident and road work information for the selected route will appear here. <br/><br/> If a route has been selected and this message is still shown then there are no known incidents or current/planned road works on the selected route.</p>}
+            {state.markerInfo.map((info) => {
+              return <MarkerInfo key={"markerInfo" + info.guid} info={ info } />
+            })}
           </div>
         : <div onClick={setNormalMapMode} className="route-mode-info">
             <h1>Route Select Mode: {state.mapMode === "select-to" ? " Destination" : " Starting Point"}</h1>

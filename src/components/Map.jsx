@@ -27,6 +27,14 @@ export default function Map({ children }) {
     }
   }, [map, state.userLocation]);
 
+  // update map reference
+  useEffect(() => {
+    dispatch({
+      type: ActionType.SET_MAP_REFERENCE,
+      payload: map
+    });
+  }, [map, dispatch])
+
   useEffect(() => {
     if (map) {
       map.on("click", ({latlng}) => {
