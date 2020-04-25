@@ -16,6 +16,10 @@
   color: white;
 }
 
+.__react_component_tooltip {
+  z-index: 1060;
+}
+
 .route-window {
   width: 20vw;
   display: flex;

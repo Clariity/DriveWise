@@ -5,6 +5,7 @@ import MapWindow from "./components/MapWindow";
 import { StoreContext, ActionType } from "./store";
 import fetchRoadworksData from "./data";
 import { useGeolocation } from "./hooks";
+import ReactTooltip from "react-tooltip";
 import "./styles/App.css";
 import "./styles/Responsive.css";
 import "leaflet/dist/leaflet.css";
@@ -43,6 +44,7 @@ export default function App() {
   return (
     <div className='app-container'>
       <AppBar />
+      <ReactTooltip delayShow={500}/>
       <div className="App">
         <RouteWindow />
         <MapWindow />

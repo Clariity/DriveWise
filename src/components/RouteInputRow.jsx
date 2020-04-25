@@ -93,12 +93,14 @@ export default function RouteInputRow({ direction }) {
         <button
           className="route-input-button"
           onClick={() => handleGeolocationButton()}
+          data-tip="Set point as current location"
         >
           <i className="material-icons">gps_fixed</i>
         </button>
         <button
           className={getBlurClassName()}
           onClick={() => handleAddLocation()}
+          data-tip="Route Mode: Set point by clicking on map"
         >
           <i className="material-icons">add_location</i>
         </button>

@@ -44,7 +44,7 @@ export default ({dateType}) => {
   
   return (
     <div style={{width: "100%"}}>
-      <p className="date-title">{dateType +  " Date"}</p>
+      <p className="date-title" data-tip="Click below to bring up date picker">{dateType +  " Date"}</p>
       <DatePicker 
         selected={selected} 
         onChange={handleSelectedChange}
