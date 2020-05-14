@@ -18,12 +18,7 @@ export default function App() {
   useEffect(() => {
     dispatch({ type: ActionType.SET_MAP_SPINNER, payload: true })
     fetchRoadworksData().then((data) => {
-      dispatch({ type: ActionType.SET_HE_INCIDENTS, payload: data[0] });
-      dispatch({ type: ActionType.SET_HE_CURRENT, payload: data[1] });
-      dispatch({ type: ActionType.SET_HE_PLANNED, payload: data[2] });
-      dispatch({ type: ActionType.SET_TFL_SEVERE, payload: data[3] });
-      dispatch({ type: ActionType.SET_TFL_CURRENT, payload: data[4] });
-      dispatch({ type: ActionType.SET_TFL_PLANNED, payload: data[5] });
+      dispatch({ type: ActionType.SET_ROADWORKS_DATA, payload: data });
       dispatch({ type: ActionType.SET_MAP_SPINNER, payload: false })
     });
     // React guarantees that dispatch is always the same, so we can put it in the deps array

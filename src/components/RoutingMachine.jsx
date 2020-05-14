@@ -31,13 +31,8 @@ export default function RoutingMachine({ map }) {
 
       control.on("routeselected", ({ route }) => {
         //console.log(route.instructions) Could potentially do something with the instructions
-        dispatch({
-          type: ActionType.SET_ROUTE_COORDINATES,
-          payload: route.coordinates,
-        });
-
+        dispatch({ type: ActionType.SET_ROUTE, payload: { coordinates: route.coordinates, time: route.summary.totalTime }});
         map.fitBounds([route.waypoints[0].latLng, route.waypoints[1].latLng]);
-        dispatch({ type: ActionType.SET_MAP_SPINNER, payload: false })
       });
 
       control.addTo(map);
@@ -69,7 +64,7 @@ export default function RoutingMachine({ map }) {
       routingControl.setWaypoints([]);
       routingControl.route();
     }
-    
+
   }, [routingControl, map, state.routeFromLocation, state.routeToLocation]);
 
   return <></>;

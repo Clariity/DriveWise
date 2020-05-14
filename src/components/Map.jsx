@@ -96,6 +96,7 @@ export default function Map({ children }) {
 
   useEffect(() => {
     if (map) {
+      console.log("Spinner set to", state.mapSpinner)
       map.spin(state.mapSpinner, spinnerOptions)
     }
   }, [map, state.mapSpinner])
@@ -105,7 +106,7 @@ export default function Map({ children }) {
     React.cloneElement(child, { map })
   );
 
-  const opacity = state.mapSpinner ? "0.3" : "1"
+  const opacity = state.mapSpinner ? "0.5" : "1"
 
   return (
     <div id={state.mapMode !== "normal" ? "crosshairs" : null} style={{ opacity }} className="drivewise-map" ref={mapRef}>

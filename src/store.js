@@ -11,13 +11,8 @@ const ActionType = {
   SET_ROUTE_FROM_LOCATION: "SET_ROUTE_FROM_LOCATION",
   SET_START_DATE: "SET_START_DATE",
   SET_END_DATE: "SET_END_DATE",
-  SET_ROUTE_COORDINATES: "SET_ROUTE_COORDINATES",
-  SET_HE_INCIDENTS: "SET_HE_INCIDENTS",
-  SET_HE_CURRENT: "SET_HE_CURRENT",
-  SET_HE_PLANNED: "SET_HE_PLANNED",
-  SET_TFL_SEVERE: "SET_TFL_SEVERE",
-  SET_TFL_CURRENT: "SET_TFL_CURRENT",
-  SET_TFL_PLANNED: "SET_TFL_PLANNED",
+  SET_ROUTE: "SET_ROUTE",
+  SET_ROADWORKS_DATA: "SET_ROADWORKS_DATA",
   SET_MARKER_INFO: "SET_MARKER_INFO",
   SET_MAP_REFERENCE: "SET_MAP_REFERENCE"
 };
@@ -31,6 +26,7 @@ const intialState = {
   startDate: date,
   endDate: new Date(date.getTime() + 7 * 24 * 60 * 60 * 1000),
   routeCoordinates: [],
+  routeTime: "",
   heIncidents: [],
   heCurrent: [],
   hePlanned: [],
@@ -60,26 +56,24 @@ const StateProvider = ({ children }) => {
         return { ...state, startDate: action.payload };
       case ActionType.SET_END_DATE:
         return { ...state, endDate: action.payload };
-      case ActionType.SET_ROUTE_COORDINATES:
-        return { ...state, routeCoordinates: action.payload };
-      case ActionType.SET_HE_INCIDENTS:
-        return { ...state, heIncidents: action.payload };
-      case ActionType.SET_HE_CURRENT:
-        return { ...state, heCurrent: action.payload };
-      case ActionType.SET_HE_PLANNED:
-        return { ...state, hePlanned: action.payload };
-      case ActionType.SET_TFL_SEVERE:
-        return { ...state, tflSevere: action.payload };
-      case ActionType.SET_TFL_CURRENT:
-        return { ...state, tflCurrent: action.payload };
-      case ActionType.SET_TFL_PLANNED:
-        return { ...state, tflPlanned: action.payload };
+      case ActionType.SET_ROUTE:
+        return { ...state, routeCoordinates: action.payload.coordinates, routeTime: action.payload.time };
+      case ActionType.SET_ROADWORKS_DATA:
+        return {
+          ...state,
+          heIncidents: action.payload[0],
+          heCurrent: action.payload[1],
+          hePlanned: action.payload[2],
+          tflSevere: action.payload[3],
+          tflCurrent: action.payload[4],
+          tflPlanned: action.payload[5]
+        };
       case ActionType.SET_MARKER_INFO:
         return { ...state, markerInfo: action.payload };
       case ActionType.SET_MAP_REFERENCE:
         return { ...state, mapReference: action.payload };
       default:
-        break;
+       throw new Error(`Unhandled ActionType ${action.type}`)
     }
   }, intialState);
 

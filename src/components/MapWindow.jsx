@@ -4,6 +4,7 @@ import Map from "./Map";
 import Marker from "./Marker";
 import RoutingMachine from "./RoutingMachine";
 import { ActionType, StoreContext } from "../store";
+import RouteTimePopup from "./RouteTimePopup";
 
 const ky = 40000 / 360;
 
@@ -80,25 +81,23 @@ export default function MapWindow() {
       />
     ) : <></>
 
+  const routeTimePopup = state.routeCoordinates.length > 0 ? <RouteTimePopup point={state.userLocation} content={state.routeTime} /> : <></>
+
   // We make sure to only recompute the route roadworks when the coordinates (aka the route) changes
   const routeRoadworks = useMemo(() => {
     console.log("Recalculating route roadworks");
-    const roadworks = state.heCurrent;
+    const roadworks = [...state.heCurrent, ...state.heIncidents, ...state.hePlanned, ...state.tflSevere, ...state.tflPlanned, ...state.tflCurrent];
     const coordinates = state.routeCoordinates;
 
-    return roadworks.filter((point) => {
-      return isPointNear(point, coordinates);
-    });
-  }, [state.routeCoordinates, state.heCurrent]);
+    return roadworks.filter((point) => isPointNear(point, coordinates));
+  }, [state.routeCoordinates, state.heCurrent, state.heIncidents, state.hePlanned, state.tflSevere, state.tflPlanned, state.tflCurrent]);
 
   // Updating any marker information when the filtered roadworks array changes
   useEffect(() => {
     // TODO: order routeRoadworks by date first (if not done already)
     // Note: This will need to be changed when more than heCurrent is added, a color needs to be passed as well so we can set the appropriate pin colour to be displayed in the route info section, currently is just manually showing orange
-    dispatch({
-      type: ActionType.SET_MARKER_INFO,
-      payload: routeRoadworks,
-    });
+    dispatch({type: ActionType.SET_MARKER_INFO, payload: routeRoadworks });
+    dispatch({ type: ActionType.SET_MAP_SPINNER, payload: false })
   }, [dispatch, routeRoadworks])
 
   return (
@@ -106,6 +105,7 @@ export default function MapWindow() {
       <Map>
         <RoutingMachine />
         {locationMarker}
+        {routeTimePopup}
         {routeFromMarker}
         {routeToMarker}
         {routeRoadworks.map((roadwork) => (

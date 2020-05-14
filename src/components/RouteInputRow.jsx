@@ -43,7 +43,7 @@ export default function RouteInputRow({ direction }) {
     dispatch({ type, payload: location });
     // We need to remember to clear the coordinates here so the markers are removed
     if (value.length === 0)
-      dispatch({ type: ActionType.SET_ROUTE_COORDINATES, payload: [] });
+      dispatch({ type: ActionType.SET_ROUTE, payload: { coordinates: [], time: "" } });
   }
 
   function handleGeolocationButton() {
