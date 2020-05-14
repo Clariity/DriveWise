@@ -34,10 +34,10 @@ export default function MapWindow() {
 
   function isMarkerOnLocation() {
     if (state.routeFromLocation.length > 0)
-      if(state.routeFromLocation[0].center[0] === state.userLocation[0] && state.routeFromLocation[0].center[1] === state.userLocation[1])
+      if (state.routeFromLocation[0].center[0] === state.userLocation[0] && state.routeFromLocation[0].center[1] === state.userLocation[1])
         return true
     if (state.routeToLocation.length > 0)
-      if(state.routeToLocation[0].center[0] === state.userLocation[0] && state.routeToLocation[0].center[1] === state.userLocation[1])
+      if (state.routeToLocation[0].center[0] === state.userLocation[0] && state.routeToLocation[0].center[1] === state.userLocation[1])
         return true
     return false
   }
@@ -53,8 +53,8 @@ export default function MapWindow() {
         color={"blue"}
       />
     ) : (
-      <></>
-    );
+        <></>
+      );
 
   const routeToMarker =
     state.routeToLocation.length > 0 ? (
@@ -67,12 +67,12 @@ export default function MapWindow() {
         color={"blue"}
       />
     ) : (
-      <></>
-    );
+        <></>
+      );
 
-  const locationMarker = 
+  const locationMarker =
     !isMarkerOnLocation() ? (
-      <LocationMarker 
+      <LocationMarker
         point={{
           latitude: state.userLocation[0],
           longitude: state.userLocation[1]

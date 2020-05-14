@@ -16,6 +16,7 @@ export default function App() {
   const [location, locationError] = useGeolocation();
 
   useEffect(() => {
+    dispatch({ type: ActionType.SET_MAP_SPINNER, payload: true })
     fetchRoadworksData().then((data) => {
       dispatch({ type: ActionType.SET_HE_INCIDENTS, payload: data[0] });
       dispatch({ type: ActionType.SET_HE_CURRENT, payload: data[1] });
@@ -23,6 +24,7 @@ export default function App() {
       dispatch({ type: ActionType.SET_TFL_SEVERE, payload: data[3] });
       dispatch({ type: ActionType.SET_TFL_CURRENT, payload: data[4] });
       dispatch({ type: ActionType.SET_TFL_PLANNED, payload: data[5] });
+      dispatch({ type: ActionType.SET_MAP_SPINNER, payload: false })
     });
     // React guarantees that dispatch is always the same, so we can put it in the deps array
     // to appease the linter and safely know it will never refire the effect

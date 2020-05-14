@@ -6,6 +6,7 @@ const date = new Date();
 const ActionType = {
   SET_USER_LOCATION: "SET_USER_LOCATION",
   SET_MAP_MODE: "SET_MAP_MODE",
+  SET_MAP_SPINNER: "SET_MAP_SPINNER",
   SET_ROUTE_TO_LOCATION: "SET_ROUTE_TO_LOCATION",
   SET_ROUTE_FROM_LOCATION: "SET_ROUTE_FROM_LOCATION",
   SET_START_DATE: "SET_START_DATE",
@@ -24,6 +25,7 @@ const ActionType = {
 const intialState = {
   userLocation: [52.6386, -1.13169],
   mapMode: "normal",
+  mapSpinner: false,
   routeToLocation: [],
   routeFromLocation: [],
   startDate: date,
@@ -47,6 +49,9 @@ const StateProvider = ({ children }) => {
         return { ...state, userLocation: action.payload };
       case ActionType.SET_MAP_MODE:
         return { ...state, mapMode: action.payload };
+      case ActionType.SET_MAP_SPINNER:
+        console.log("Setting map spinner to:", action.payload)
+        return { ...state, mapSpinner: action.payload };
       case ActionType.SET_ROUTE_TO_LOCATION:
         return { ...state, routeToLocation: action.payload };
       case ActionType.SET_ROUTE_FROM_LOCATION:

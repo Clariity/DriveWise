@@ -1,8 +1,30 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import L from "leaflet";
+import "leaflet-spin"
 import { StoreContext, ActionType } from "../store";
 import { reverseLocationLookup } from "../data";
 import Swal from 'sweetalert2'
+
+const spinnerOptions = {
+  lines: 13, // The number of lines to draw
+  length: 46, // The length of each line
+  width: 6, // The line thickness
+  radius: 51, // The radius of the inner circle
+  scale: 0.7, // Scales overall size of the spinner
+  corners: 1, // Corner roundness (0..1)
+  color: '#ffffff', // CSS color or array of colors
+  fadeColor: 'transparent', // CSS color or array of colors
+  speed: 1.7, // Rounds per second
+  rotate: 0, // The rotation offset
+  animation: 'spinner-line-fade-more', // The CSS animation name for the lines
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  className: 'spinner', // The CSS class to assign to the spinner
+  top: '50%', // Top position relative to parent
+  left: '50%', // Left position relative to parent
+  shadow: '0 0 1px transparent', // Box-shadow for the lines
+  position: 'absolute' // Element positioning
+}
 
 export default function Map({ children }) {
   const mapRef = useRef(null);
@@ -37,7 +59,7 @@ export default function Map({ children }) {
 
   useEffect(() => {
     if (map) {
-      map.on("click", ({latlng}) => {
+      map.on("click", ({ latlng }) => {
         if (state.mapMode !== "normal") {
           const coords = [latlng.lat, latlng.lng];
           const type =
@@ -72,13 +94,21 @@ export default function Map({ children }) {
     }
   }, [dispatch, map, state.mapMode]);
 
+  useEffect(() => {
+    if (map) {
+      map.spin(state.mapSpinner, spinnerOptions)
+    }
+  }, [map, state.mapSpinner])
+
   // We augment the children of this element with a prop that holds the map element, so that leaflet can access it
   const childrenWithMap = React.Children.map(children, (child) =>
     React.cloneElement(child, { map })
   );
 
+  const opacity = state.mapSpinner ? "0.3" : "1"
+
   return (
-    <div id={state.mapMode !== "normal" ? "crosshairs" : null} className="drivewise-map" ref={mapRef}>
+    <div id={state.mapMode !== "normal" ? "crosshairs" : null} style={{ opacity }} className="drivewise-map" ref={mapRef}>
       {childrenWithMap}
     </div>
   );
