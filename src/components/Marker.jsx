@@ -2,9 +2,8 @@ import React, { useEffect } from "react";
 import L from "leaflet";
 
 export default function Marker({ map, point, color }) {
-  const [x, y] = "$type" in point ? JSON.parse(point.point) : [parseFloat(point.latitude), point.longitude]
-  const latLng = "$type" in point ? [y, x] : [x, y];
   useEffect(() => {
+    console.log(point)
     const icon = L.icon({
       iconUrl: require(`../media/marker-icon-${color}.png`),
       iconSize: [25, 41], // size of the icon
@@ -12,31 +11,32 @@ export default function Marker({ map, point, color }) {
       popupAnchor: [1, -34], // point from which the popup should open relative to the iconAnchor
       shadowSize: [41, 41], // size of the shadow
     });
-    const marker = L.marker(latLng, {
+    const marker = L.marker(point.latLng, {
       icon,
     });
 
-    const startDateTime = new Date(point.overallStart)
-    const endDateTime = new Date(point.overallEnd)
+    const startDateTime = new Date(point.startDate)
+    const endDateTime = new Date(point.endDate)
 
     if (map) {
       marker.addTo(map);
       marker.bindPopup(
         point.startEndTitle ||
-        `<b>${point.title}</b> <br>
-        ${point.category1} - ${point.category2} <br>
+        `<div style="overflow-x: scroll"><b>${point.title}</b> <br>
+        ${point.category} - ${point.subCategory} <br>
         Start: ${startDateTime} <br>
         End: ${endDateTime} <br><br>
         Technical Details: <br>
         Author: ${point.author} <br>
-        GUID: ${point.guid || point.id} <br>
+        GUID: ${point.id} <br>
         Link: <a href="${point.link}" target="_blank" rel="noopener noreferrer">${point.link}</a> <br>
-        Reference: ${point.reference}`
+        Reference: ${point.reference || point.id}</div>`
+        
       );
     }
 
     return () => map.removeLayer(marker);
-  }, [map, point, color, latLng]);
+  }, [map, point, color]);
 
   return <></>;
 }
