@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import L from "leaflet";
 
 export default function Marker({ map, point, color }) {
+  const [x, y] = "$type" in point ? JSON.parse(point.point) : [parseFloat(point.latitude), point.longitude]
+  const latLng = "$type" in point ? [y, x] : [x, y];
   useEffect(() => {
     const icon = L.icon({
       iconUrl: require(`../media/marker-icon-${color}.png`),
@@ -10,7 +12,7 @@ export default function Marker({ map, point, color }) {
       popupAnchor: [1, -34], // point from which the popup should open relative to the iconAnchor
       shadowSize: [41, 41], // size of the shadow
     });
-    const marker = L.marker([point.latitude, point.longitude], {
+    const marker = L.marker(latLng, {
       icon,
     });
 
@@ -27,14 +29,14 @@ export default function Marker({ map, point, color }) {
         End: ${endDateTime} <br><br>
         Technical Details: <br>
         Author: ${point.author} <br>
-        GUID: ${point.guid} <br>
+        GUID: ${point.guid || point.id} <br>
         Link: <a href="${point.link}" target="_blank" rel="noopener noreferrer">${point.link}</a> <br>
         Reference: ${point.reference}`
       );
     }
 
     return () => map.removeLayer(marker);
-  }, [map, point, color]);
+  }, [map, point, color, latLng]);
 
   return <></>;
 }

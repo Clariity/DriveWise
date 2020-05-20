@@ -30,7 +30,7 @@ function convertHeXmlToJson(htmlcollection) {
       if (tagName === "category") {
         tagName = acc.hasOwnProperty("category1") ? "category2" : "category1";
       }
-      return Object.assign(acc, { [tagName]: elem.innerHTML });
+      return Object.assign(acc, { [tagName]: elem.innerHTML, "__type": "severe" });
     }, {})
   );
 }
@@ -73,10 +73,10 @@ export default async function fetchRoadworkData() {
   }
 
   const incidentItems = heIncidentsXml.getElementsByTagName("item");
-  const newHeIncidents = convertHeXmlToJson(incidentItems);
+  const newHeIncidents = convertHeXmlToJson(incidentItems)
 
   const roadworksItems = heRoadworksXml.getElementsByTagName("item");
-  const newRoadworks = convertHeXmlToJson(roadworksItems);
+  const newRoadworks = convertHeXmlToJson(roadworksItems)
 
   // partition the new roadworks into current and planned
   const filter = (elem, startField, endField) =>
@@ -85,8 +85,8 @@ export default async function fetchRoadworkData() {
   const [newHeRoadworksCurrent, newHeRoadworksPlanned] = newRoadworks.reduce(
     ([current, planned], elem) => {
       return filter(elem, "overallStart", "overallEnd")
-        ? [[...current, elem], planned]
-        : [current, [...planned, elem]];
+        ? [[...current, {...elem, "__type": "current"}], planned]
+        : [current, [...planned, {...elem, "__type": "planned"}]];
     },
     [[], []]
   );
@@ -96,16 +96,15 @@ export default async function fetchRoadworkData() {
     newTflCurrent = [],
     newTflPlanned = [];
 
-  let pushToArray;
-  for (let j = 0; j < tflJson.length; j++) {
-    // loop through tfl data and add to respective arrays, will need to extract data we know we need at a later point, currently keeps everything
-    pushToArray =
-      tflJson[j].severity === "Severe"
-        ? newTflSevere
-        : filter(tflJson[j], "startDateTime", "endDateTime")
-        ? newTflCurrent
-        : newTflPlanned;
-    pushToArray.push(tflJson[j]);
+  // loop through tfl data and add to respective arrays, will need to extract data we know we need at a later point, currently keeps everything
+  for (const json of tflJson) {
+    if (json.severity === "Severe") {
+      newTflSevere.push({ ...json, "__type": "severe" })
+    } else if (filter(json, "startDateTime", "endDateTime")) {
+      newTflCurrent.push({ ...json, "__type": "current"})
+    } else {
+      newTflPlanned.push({ ...json, "__type": "planned"})
+    }
   }
 
   return [
@@ -130,4 +129,21 @@ export function reverseLocationLookup(coords) {
   const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?country=GB&access_token=${MAPBOX_API_KEY}`;
 
   return fetch(url).then((result) => result.json());
+}
+
+export function getColor(type) {
+  switch(type) {
+    case "severe": {
+      return "red"
+    }
+    case "planned": {
+      return "gold"
+    }
+    case "current": {
+      return "orange"
+    }
+    default: {
+      throw new Error(`Unknown roadwork ${type}`)
+    }
+  }
 }

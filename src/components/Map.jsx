@@ -12,7 +12,7 @@ const spinnerOptions = {
   radius: 51, // The radius of the inner circle
   scale: 0.7, // Scales overall size of the spinner
   corners: 1, // Corner roundness (0..1)
-  color: '#ffffff', // CSS color or array of colors
+  color: '#ef772d', // CSS color or array of colors
   fadeColor: 'transparent', // CSS color or array of colors
   speed: 1.7, // Rounds per second
   rotate: 0, // The rotation offset
@@ -109,7 +109,7 @@ export default function Map({ children }) {
   const opacity = state.mapSpinner ? "0.5" : "1"
 
   return (
-    <div id={state.mapMode !== "normal" ? "crosshairs" : null} style={{ opacity }} className="drivewise-map" ref={mapRef}>
+    <div id={state.mapMode !== "normal" ? "crosshairs" : null} className="drivewise-map" ref={mapRef}>
       {childrenWithMap}
     </div>
   );
