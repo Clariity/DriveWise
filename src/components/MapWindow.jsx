@@ -21,10 +21,10 @@ function arePointsNear(checkPoint, centerPoint, km) {
 }
 
 function isPointNear(point, coordinates) {
-  const [x, y] = "$type" in point ? JSON.parse(point.point) : [parseFloat(point.latitude), Math.abs(point.longitude)]
+  const [lat, lng] = point.latLng
   for (const coord of coordinates) {
     const checkPoint = [coord.lat, Math.abs(coord.lng)];
-    const centerPoint = "$type" in point ? [y, Math.abs(x)] : [x, y];
+    const centerPoint = [lat, Math.abs(lng)]
     if (arePointsNear(checkPoint, centerPoint, 0.1)) {
       return true;
     }
@@ -49,8 +49,7 @@ export default function MapWindow() {
     state.routeFromLocation.length > 0 ? (
       <Marker
         point={{
-          latitude: state.routeFromLocation[0].center[0],
-          longitude: state.routeFromLocation[0].center[1],
+          latLng: [state.routeFromLocation[0].center[0], state.routeFromLocation[0].center[1]],
           startEndTitle: "<b>Starting Point: </b>" + state.routeFromLocation[0].text
         }}
         color={"blue"}
@@ -63,8 +62,7 @@ export default function MapWindow() {
     state.routeToLocation.length > 0 ? (
       <Marker
         point={{
-          latitude: state.routeToLocation[0].center[0],
-          longitude: state.routeToLocation[0].center[1],
+          latLng: [state.routeToLocation[0].center[0], state.routeToLocation[0].center[1]],
           startEndTitle: "<b>Destination: </b>" + state.routeToLocation[0].text
         }}
         color={"blue"}
@@ -73,15 +71,14 @@ export default function MapWindow() {
         <></>
       );
 
-  const locationMarker =
-    !isMarkerOnLocation() ? (
-      <LocationMarker
-        point={{
-          latitude: state.userLocation[0],
-          longitude: state.userLocation[1]
-        }}
-      />
-    ) : <></>
+  // const locationMarker =
+  //   !isMarkerOnLocation() ? (
+  //     <LocationMarker
+  //       point={{
+  //         latLng: [state.userLocation[0] || 0, state.userLocation[1] || 0]
+  //       }}
+  //     />
+  //   ) : <></>
 
   const routeTimePopup = state.routeCoordinates.length > 0 ? <RouteTimePopup point={state.routeFromLocation[0].center} content={state.routeTime} /> : <></>
 
@@ -92,9 +89,9 @@ export default function MapWindow() {
     const selectedStart = new Date(state.startDate)
     const selectedEnd = new Date(state.endDate)
 
-    function inDateRange({ overallStart, overallEnd, startDateTime, endDateTime }) {
-      const endsAfterStartDate = new Date(overallEnd || endDateTime) >= selectedStart
-      const startsBeforeEndDate = new Date(overallStart || startDateTime) <= selectedEnd  
+    function inDateRange({ startDate, endDate }) {
+      const endsAfterStartDate = endDate >= selectedStart
+      const startsBeforeEndDate = startDate <= selectedEnd  
       return (endsAfterStartDate && startsBeforeEndDate)
     }
 
@@ -102,8 +99,8 @@ export default function MapWindow() {
       const currentRoadworks = [...state.heCurrent, ...state.tflCurrent].filter(inDateRange).filter(point => isPointNear(point, coordinates))
       const plannedRoadworks = [...state.hePlanned, ...state.tflPlanned].filter(inDateRange).filter(point => isPointNear(point, coordinates))
       const severeRoadworks = [...state.heIncidents, ...state.tflSevere].filter(inDateRange).filter(point => isPointNear(point, coordinates))
-
-      return [...currentRoadworks, ...plannedRoadworks, ...severeRoadworks];
+      
+      return [...severeRoadworks, ...currentRoadworks, ...plannedRoadworks];
     } else {
       return []
     }
@@ -118,17 +115,19 @@ export default function MapWindow() {
     dispatch({ type: ActionType.SET_MAP_SPINNER, payload: false })
   }, [dispatch, routeRoadworks])
 
+  const roadworkMarkers = state.markerInfo.map(roadwork => (
+    <Marker key={roadwork.id} point={roadwork} color={getColor(roadwork)} />
+  ))
+
   return (
     <div className="map-window">
       <Map>
         <RoutingMachine />
-        {locationMarker}
+        {/* {locationMarker} */}
         {routeTimePopup}
         {routeFromMarker}
         {routeToMarker}
-        {state.markerInfo.map(roadwork => (
-          <Marker key={roadwork.guid || roadwork} point={roadwork} color={getColor(roadwork["__type"])} />
-        ))}
+        {roadworkMarkers}
       </Map>
     </div>
   );

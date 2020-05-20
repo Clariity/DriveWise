@@ -33,7 +33,7 @@ export default function RouteWindow() {
         ? <div className="route-info">
             {state.markerInfo.length === 0 && <p>Once a route has been selected, any identified incident and road work information for the selected route will appear here. <br/><br/> If a route has been selected and this message is still shown then there are no known incidents or current/planned road works on the selected route.</p>}
             {state.markerInfo.map(roadwork => (
-              <MarkerInfo key={"markerInfo" + (roadwork.guid || roadwork.id)} info={roadwork} color={getColor(roadwork["__type"])} />
+              <MarkerInfo key={"markerInfo" + (roadwork.id)} info={roadwork} color={getColor(roadwork)} />
             ))}
           </div>
         : <div onClick={setNormalMapMode} className="route-mode-info">

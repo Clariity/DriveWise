@@ -24,14 +24,14 @@ function getDates() {
 
 function convertHeXmlToJson(htmlcollection) {
   return Array.from(htmlcollection).map((incident) =>
-    Array.from(incident.children).reduce((acc, elem) => {
+    getRoadworkObject(Array.from(incident.children).reduce((acc, elem) => {
       let tagName = elem.tagName;
       // Handle multiple tags named category
       if (tagName === "category") {
         tagName = acc.hasOwnProperty("category1") ? "category2" : "category1";
       }
-      return Object.assign(acc, { [tagName]: elem.innerHTML, "__type": "severe" });
-    }, {})
+      return Object.assign(acc, { [tagName]: elem.innerHTML });
+    }, {}), "severe")
   );
 }
 
@@ -84,9 +84,9 @@ export default async function fetchRoadworkData() {
 
   const [newHeRoadworksCurrent, newHeRoadworksPlanned] = newRoadworks.reduce(
     ([current, planned], elem) => {
-      return filter(elem, "overallStart", "overallEnd")
-        ? [[...current, {...elem, "__type": "current"}], planned]
-        : [current, [...planned, {...elem, "__type": "planned"}]];
+      return filter(elem, "startDate", "endDate")
+        ? [[...current, getRoadworkObject(elem, "current")], planned]
+        : [current, [...planned, getRoadworkObject(elem, "planned")]];
     },
     [[], []]
   );
@@ -99,11 +99,11 @@ export default async function fetchRoadworkData() {
   // loop through tfl data and add to respective arrays, will need to extract data we know we need at a later point, currently keeps everything
   for (const json of tflJson) {
     if (json.severity === "Severe") {
-      newTflSevere.push({ ...json, "__type": "severe" })
+      newTflSevere.push(getRoadworkObject(json, "severe"))
     } else if (filter(json, "startDateTime", "endDateTime")) {
-      newTflCurrent.push({ ...json, "__type": "current"})
+      newTflCurrent.push(getRoadworkObject(json, "current"))
     } else {
-      newTflPlanned.push({ ...json, "__type": "planned"})
+      newTflPlanned.push(getRoadworkObject(json, "planned"))
     }
   }
 
@@ -131,7 +131,9 @@ export function reverseLocationLookup(coords) {
   return fetch(url).then((result) => result.json());
 }
 
-export function getColor(type) {
+export function getColor(roadwork) {
+  console.log(roadwork)
+  const type = roadwork["__type"]
   switch(type) {
     case "severe": {
       return "red"
@@ -145,5 +147,23 @@ export function getColor(type) {
     default: {
       throw new Error(`Unknown roadwork ${type}`)
     }
+  }
+}
+
+export function getRoadworkObject(roadwork, type) {
+  const isTfl = "$type" in roadwork
+  const [x, y] = isTfl ? JSON.parse(roadwork.point) : roadwork.latLng ? roadwork.latLng : [parseFloat(roadwork.latitude), parseFloat(roadwork.longitude)]
+  return {
+    startDate: roadwork.startDate || new Date(roadwork.overallStart || roadwork.startDateTime),
+    endDate: roadwork.endDate || new Date(roadwork.overallEnd || roadwork.endDateTime),
+    latLng: isTfl ? [y, x] : [x, y],
+    title: roadwork.title || roadwork.location,
+    category: roadwork.category1 || roadwork.category,
+    subCategory: roadwork.category2 || roadwork.subCategory,
+    author: roadwork.author || "TFL",
+    id: roadwork.guid || roadwork.id,
+    link: roadwork.link || `https://api.tfl.gov.uk/Road/All/Disruption${roadwork.url}`,
+    reference: roadwork.reference,
+    "__type": type
   }
 }

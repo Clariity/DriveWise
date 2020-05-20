@@ -22,8 +22,7 @@ export default function RouteInputRow({ direction }) {
       : ActionType.SET_ROUTE_FROM_LOCATION;
 
   function handleInputChange(value) {
-    // Only fire search after 4 characters
-    if (value.length >= 4) {
+    if (value.length >= 1) {
       locationLookup(value)
         .then((json) =>
           json.features.map((option) => ({

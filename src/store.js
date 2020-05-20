@@ -69,6 +69,7 @@ const StateProvider = ({ children }) => {
           tflPlanned: action.payload[5]
         };
       case ActionType.SET_MARKER_INFO:
+        console.log(action.payload)
         return { ...state, markerInfo: action.payload };
       case ActionType.SET_MAP_REFERENCE:
         return { ...state, mapReference: action.payload };
