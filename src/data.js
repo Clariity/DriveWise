@@ -1,10 +1,10 @@
 import { MAPBOX_API_KEY } from "./Keys";
 
 const HighwaysEnglandUnplannedEvents =
-  "http://m.highwaysengland.co.uk/feeds/rss/UnplannedEvents.xml";
+  "https://m.highwaysengland.co.uk/feeds/rss/UnplannedEvents.xml";
 
 const HighwaysEnglandCurrentEvents =
-  "http://m.highwaysengland.co.uk/feeds/rss/CurrentAndFutureEvents.xml";
+  "https://m.highwaysengland.co.uk/feeds/rss/CurrentAndFutureEvents.xml";
 
 const TflDisruption = "https://api.tfl.gov.uk/Road/All/Disruption";
 
