@@ -3,6 +3,7 @@ import RouteInputRow from "./RouteInputRow";
 import { StoreContext, ActionType } from "../store";
 import DatePicker from "./DatePicker";
 import MarkerInfo from "./MarkerInfo";
+import { getColor } from "../data"
 
 export default function RouteWindow() {
   const { state, dispatch } = useContext(StoreContext);
@@ -31,9 +32,9 @@ export default function RouteWindow() {
       { state.mapMode === "normal"
         ? <div className="route-info">
             {state.markerInfo.length === 0 && <p>Once a route has been selected, any identified incident and road work information for the selected route will appear here. <br/><br/> If a route has been selected and this message is still shown then there are no known incidents or current/planned road works on the selected route.</p>}
-            {state.markerInfo.map((info) => {
-              return <MarkerInfo key={"markerInfo" + info.guid} info={ info } />
-            })}
+            {state.markerInfo.map(roadwork => (
+              <MarkerInfo key={"markerInfo" + (roadwork.guid || roadwork.id)} info={roadwork} color={getColor(roadwork["__type"])} />
+            ))}
           </div>
         : <div onClick={setNormalMapMode} className="route-mode-info">
             <h1>Route Select Mode: {state.mapMode === "select-to" ? " Destination" : " Starting Point"}</h1>
