@@ -32,6 +32,7 @@
     min-height: 20vh;
     flex-direction: column;
     order: 2;
+    align-items: center;
   }
   .map-window {
     width: 100%;

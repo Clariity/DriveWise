@@ -8,7 +8,7 @@ function parseTime(routeTime) {
 export default function RouteTimePopup({ map, point, content }) {
   useEffect(() => {
     if(map) {
-      const popup = L.popup({ closeOnClick: false }).setLatLng(point).setContent(`Route time: ${parseTime(content)}`).openOn(map)
+      L.popup({ closeOnClick: false }).setLatLng(point).setContent(`Route time: ${parseTime(content)}`).openOn(map)
     }
   }, [map, point, content])
 

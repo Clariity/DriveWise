@@ -74,6 +74,7 @@ export default async function fetchRoadworkData() {
 
   const incidentItems = heIncidentsXml.getElementsByTagName("item");
   const newHeIncidents = convertHeXmlToJson(incidentItems)
+  console.log(newHeIncidents)
 
   const roadworksItems = heRoadworksXml.getElementsByTagName("item");
   const newRoadworks = convertHeXmlToJson(roadworksItems)
@@ -132,9 +133,8 @@ export function reverseLocationLookup(coords) {
 }
 
 export function getColor(roadwork) {
-  console.log(roadwork)
   const type = roadwork["__type"]
-  switch(type) {
+  switch (type) {
     case "severe": {
       return "red"
     }
