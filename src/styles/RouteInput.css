@@ -1,6 +1,7 @@
 .route-inputs {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .route-input-row {
@@ -42,7 +43,7 @@
   border-style: none;
   background-color: #fff;
   margin-left: 5px;
-  display: flex;  
+  display: flex;
   justify-content: center;
 }
 
@@ -128,20 +129,22 @@
 .route-info {
   border-style: solid;
   overflow-y: auto;
+  border-radius: 3px;
 }
 
 .route-mode-info {
   border-style: dashed;
 }
 
-.route-info, .route-mode-info {
+.route-info,
+.route-mode-info {
   height: 100%;
   border-color: white;
   border-width: 2px;
   margin: 10px;
   margin-top: 0px;
   padding: 10px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.5rem;
   color: white;
   justify-content: center;

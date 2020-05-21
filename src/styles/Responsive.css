@@ -54,12 +54,17 @@
     padding-top: 10px;
     flex-direction: column;
   }
-  .route-info, .route-mode-info {
+  .route-info,
+  .route-mode-info {
     width: calc(100vw - 40px);
     min-height: calc(20vh - 20px);
     margin-top: 5px;
     max-height: 600px;
   }
+  .route-info-box {
+    width: calc(100vw - 40px);
+  }
+
   .react-datepicker__triangle {
     transform: translate3d(70px, 0px, 0px);
   }
@@ -75,9 +80,10 @@
   .route-input-group {
     width: calc(100%);
   }
-  .route-info, .route-mode-info {
-    min-width: calc(100% - 20px);
-    width: calc(100vw - 38px);
+  .route-info,
+  .route-mode-info {
+    min-width: calc(100% - 40px);
+    width: calc(100vw - 40px);
   }
   .marker-info-content {
     text-align: left;
