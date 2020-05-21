@@ -11,7 +11,7 @@ export default function LocationMarker({ map, point }) {
         popupAnchor: [0, -15], // point from which the popup should open relative to the iconAnchor
         shadowSize: [30, 30], // size of the shadow
       });
-      const marker = L.marker([point.latitude, point.longitude], {
+      const marker = L.marker(point.latLng, {
         icon,
       });
 

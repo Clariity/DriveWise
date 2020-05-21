@@ -3,7 +3,6 @@ import L from "leaflet";
 
 export default function Marker({ map, point, color }) {
   useEffect(() => {
-    console.log(point)
     const icon = L.icon({
       iconUrl: require(`../media/marker-icon-${color}.png`),
       iconSize: [25, 41], // size of the icon

@@ -71,14 +71,14 @@ export default function MapWindow() {
         <></>
       );
 
-  // const locationMarker =
-  //   !isMarkerOnLocation() ? (
-  //     <LocationMarker
-  //       point={{
-  //         latLng: [state.userLocation[0] || 0, state.userLocation[1] || 0]
-  //       }}
-  //     />
-  //   ) : <></>
+  const locationMarker =
+    !isMarkerOnLocation() ? (
+      <LocationMarker
+        point={{
+          latLng: [state.userLocation[0] || 0, state.userLocation[1] || 0]
+        }}
+      />
+    ) : <></>
 
   const routeTimePopup = state.routeCoordinates.length > 0 ? <RouteTimePopup point={state.routeFromLocation[0].center} content={state.routeTime} /> : <></>
 
@@ -108,7 +108,6 @@ export default function MapWindow() {
 
   // Updating any marker information when the filtered roadworks array changes
   useEffect(() => {
-    // TODO: order routeRoadworks by date first (if not done already)
     // Note: This will need to be changed when more than heCurrent is added, a color needs to be passed as well so we can set the appropriate pin colour to be displayed in the route info section, currently is just manually showing orange
     dispatch({ type: ActionType.SET_MARKER_INFO, payload: routeRoadworks });
     console.log(`Found ${routeRoadworks.length} relevant roadworks`)
@@ -123,7 +122,7 @@ export default function MapWindow() {
     <div className="map-window">
       <Map>
         <RoutingMachine />
-        {/* {locationMarker} */}
+        {locationMarker}
         {routeTimePopup}
         {routeFromMarker}
         {routeToMarker}

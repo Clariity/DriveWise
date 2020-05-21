@@ -1,0 +1,21 @@
+.route-info-box {
+  background-color: white;
+  border-radius: 3px;
+  width: 92%;
+  margin: 10px 0px;
+}
+
+.checkbox-row {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.checkbox-row > div {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-row label,
+.checkbox-row input {
+  margin: 0 5px;
+}

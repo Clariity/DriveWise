@@ -145,6 +145,7 @@
   font-size: 1.5rem;
   color: white;
   justify-content: center;
+  min-width: 94%;
 }
 
 .blur {

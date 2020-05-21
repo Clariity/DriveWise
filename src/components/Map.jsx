@@ -96,7 +96,6 @@ export default function Map({ children }) {
 
   useEffect(() => {
     if (map) {
-      console.log("Spinner set to", state.mapSpinner)
       map.spin(state.mapSpinner, spinnerOptions)
     }
   }, [map, state.mapSpinner])

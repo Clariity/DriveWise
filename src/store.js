@@ -14,7 +14,9 @@ const ActionType = {
   SET_ROUTE: "SET_ROUTE",
   SET_ROADWORKS_DATA: "SET_ROADWORKS_DATA",
   SET_MARKER_INFO: "SET_MARKER_INFO",
-  SET_MAP_REFERENCE: "SET_MAP_REFERENCE"
+  SET_MAP_REFERENCE: "SET_MAP_REFERENCE",
+  ADD_ROADWORK_FILTER: "ADD_ROADWORK_FILTER",
+  REMOVE_ROADWORK_FILTER: "REMOVE_ROADWORK_FILTER"
 };
 
 const intialState = {
@@ -34,7 +36,8 @@ const intialState = {
   tflCurrent: [],
   tflPlanned: [],
   markerInfo: [],
-  mapReference: null
+  mapReference: null,
+  roadworkFilter: []
 };
 const StoreContext = React.createContext(intialState);
 
@@ -46,7 +49,6 @@ const StateProvider = ({ children }) => {
       case ActionType.SET_MAP_MODE:
         return { ...state, mapMode: action.payload };
       case ActionType.SET_MAP_SPINNER:
-        console.log("Setting map spinner to:", action.payload)
         return { ...state, mapSpinner: action.payload };
       case ActionType.SET_ROUTE_TO_LOCATION:
         return { ...state, routeToLocation: action.payload };
@@ -69,10 +71,13 @@ const StateProvider = ({ children }) => {
           tflPlanned: action.payload[5]
         };
       case ActionType.SET_MARKER_INFO:
-        console.log(action.payload)
         return { ...state, markerInfo: action.payload };
       case ActionType.SET_MAP_REFERENCE:
         return { ...state, mapReference: action.payload };
+      case ActionType.ADD_ROADWORK_FILTER:
+        return { ...state, roadworkFilter: [...state.roadworkFilter, action.payload] }
+      case ActionType.REMOVE_ROADWORK_FILTER:
+        return { ...state, roadworkFilter: state.roadworkFilter.filter(f => f !== action.payload) }
       default:
        throw new Error(`Unhandled ActionType ${action.type}`)
     }
