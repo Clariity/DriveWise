@@ -80,7 +80,7 @@ export default function MapWindow() {
       />
     ) : <></>
 
-  const routeTimePopup = state.routeCoordinates.length > 0 ? <RouteTimePopup point={state.routeFromLocation[0].center} content={state.routeTime} /> : <></>
+  const routeTimePopup = state.routeCoordinates.length > 0 && state.routeFromLocation.length > 0 && state.routeToLocation.length > 0 ? <RouteTimePopup point={state.routeFromLocation[0].center} content={state.routeTime} /> : <></>
 
   // We make sure to only recompute the route roadworks when the coordinates (aka the route) changes
   const routeRoadworks = useMemo(() => {
@@ -114,7 +114,14 @@ export default function MapWindow() {
     dispatch({ type: ActionType.SET_MAP_SPINNER, payload: false })
   }, [dispatch, routeRoadworks])
 
-  const roadworkMarkers = state.markerInfo.filter(roadwork => !state.roadworkFilter.includes(roadwork["__type"])).map(roadwork => (
+  const roadworkMarkers = state.markerInfo.filter(roadwork => !state.roadworkFilter.includes(roadwork["__type"])).filter(roadwork => {
+    if (state.showOvernightRoadworks) {
+      return true
+
+    } else {
+      return roadwork.isOvernight === false
+    }
+  }).map(roadwork => (
     <Marker key={roadwork.id} point={roadwork} color={getColor(roadwork)} />
   ))
 

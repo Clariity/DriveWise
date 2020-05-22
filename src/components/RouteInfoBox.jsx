@@ -85,6 +85,9 @@ export default function RouteInfoBox() {
           </label>
         </div>
       </div>
+      <div className="overnight-button-div">
+        <button onClick={() => dispatch({ type: ActionType.SHOW_OVERNIGHT_ROADWORKS, payload: !state.showOvernightRoadworks })}>{state.showOvernightRoadworks ? "Hide" : "Show"} overnight roadworks</button>
+      </div>
     </div>
   );
 }

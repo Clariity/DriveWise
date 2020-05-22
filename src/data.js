@@ -148,20 +148,27 @@ export function getColor(roadwork) {
   }
 }
 
+function isDateOvernight(date) {
+  return date.getHours() > 0 && date.getHours() < 7
+}
+
 export function getRoadworkObject(roadwork, type) {
   const isTfl = "$type" in roadwork
   const [x, y] = isTfl ? JSON.parse(roadwork.point) : roadwork.latLng ? roadwork.latLng : [parseFloat(roadwork.latitude), parseFloat(roadwork.longitude)]
+  const endDate = roadwork.endDate || new Date(roadwork.overallEnd || roadwork.endDateTime)
+  const isOvernight = isDateOvernight(endDate)
   return {
     startDate: roadwork.startDate || new Date(roadwork.overallStart || roadwork.startDateTime),
-    endDate: roadwork.endDate || new Date(roadwork.overallEnd || roadwork.endDateTime),
+    endDate,
     latLng: isTfl ? [y, x] : [x, y],
     title: roadwork.title || roadwork.location,
     category: roadwork.category1 || roadwork.category,
     subCategory: roadwork.category2 || roadwork.subCategory,
     author: roadwork.author || "TFL",
     id: roadwork.guid || roadwork.id,
-    link: roadwork.link || `https://api.tfl.gov.uk/Road/All/Disruption${roadwork.url}`,
+    link: roadwork.link || `https://api.tfl.gov.uk${roadwork.url}`,
     reference: roadwork.reference,
-    "__type": type
+    "__type": type,
+    isOvernight
   }
 }

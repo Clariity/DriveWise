@@ -17,7 +17,8 @@ const ActionType = {
   SET_MARKER_INFO: "SET_MARKER_INFO",
   SET_MAP_REFERENCE: "SET_MAP_REFERENCE",
   ADD_ROADWORK_FILTER: "ADD_ROADWORK_FILTER",
-  REMOVE_ROADWORK_FILTER: "REMOVE_ROADWORK_FILTER"
+  REMOVE_ROADWORK_FILTER: "REMOVE_ROADWORK_FILTER",
+  SHOW_OVERNIGHT_ROADWORKS: "SHOW_OVERNIGHT_ROADWORKS"
 };
 
 const intialState = {
@@ -38,7 +39,8 @@ const intialState = {
   tflPlanned: [],
   markerInfo: [],
   mapReference: null,
-  roadworkFilter: []
+  roadworkFilter: [],
+  showOvernightRoadworks: true
 };
 const StoreContext = React.createContext(intialState);
 
@@ -80,6 +82,8 @@ const StateProvider = ({ children }) => {
         return { ...state, roadworkFilter: [...state.roadworkFilter, action.payload] }
       case ActionType.REMOVE_ROADWORK_FILTER:
         return { ...state, roadworkFilter: state.roadworkFilter.filter(f => f !== action.payload) }
+      case ActionType.SHOW_OVERNIGHT_ROADWORKS:
+        return { ...state, showOvernightRoadworks: action.payload }
       default:
        throw new Error(`Unhandled ActionType ${action.type}`)
     }

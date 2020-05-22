@@ -10,7 +10,7 @@ export default ({ info, color }) => {
 
   return (
     <div className="marker-info">
-      <img className="marker-icon-image" src={`./media/marker-icon-${color}.png`} alt="marker colour" onClick={() => state.mapReference.setView(info.latLng, 15)} />
+      <img className="marker-icon-image" src={`../media/marker-icon-${color}${info.isOvernight ? "-night" : ""}.png`} alt="marker colour" onClick={() => state.mapReference.setView(info.latLng, 15)} />
       <p className="icon-info">Click marker above to show on map</p>
       <div className="marker-info-content">
         <p className="info-title">{info.title}</p>

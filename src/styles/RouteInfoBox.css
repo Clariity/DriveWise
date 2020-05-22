@@ -67,3 +67,8 @@ label img {
 :checked + label img {
   transform: scale(0.9);
 }
+
+.overnight-button-div {
+  margin-top: 20px;
+  color: black;
+}

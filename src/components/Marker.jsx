@@ -4,7 +4,7 @@ import L from "leaflet";
 export default function Marker({ map, point, color }) {
   useEffect(() => {
     const icon = L.icon({
-      iconUrl: require(`../media/marker-icon-${color}.png`),
+      iconUrl: require(`../media/marker-icon-${color}${point.isOvernight ? "-night" : ""}.png`),
       iconSize: [25, 41], // size of the icon
       iconAnchor: [12, 41], // point of the icon which will correspond to marker's location
       popupAnchor: [1, -34], // point from which the popup should open relative to the iconAnchor
