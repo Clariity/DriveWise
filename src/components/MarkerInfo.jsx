@@ -7,6 +7,10 @@ export default ({ info, color }) => {
   const startDateTime = info.startDate.toLocaleString("en");
   const endDateTime = info.endDate.toLocaleString("en");
   const [showMore, setShowMore] = useState(false);
+  const isLocal =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1" ||
+    window.location.hostname === "";
 
   return (
     <div className="marker-info">
@@ -14,7 +18,8 @@ export default ({ info, color }) => {
         className={
           info.isOvernight ? "marker-icon-image-night" : "marker-icon-image"
         }
-        src={`../media/marker-icon-${color}${
+        // change to ../media for localhost
+        src={`${isLocal ? ".." : "."}/media/marker-icon-${color}${
           info.isOvernight ? "-night" : ""
         }.png`}
         alt="marker colour"

@@ -2,16 +2,20 @@ import React, { useState, useContext, useEffect } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { StoreContext, ActionType } from "../store";
 import { locationLookup, reverseLocationLookup } from "../data";
-import { useHistory } from "react-router-dom"
-import { useSearchParams } from "../hooks"
+import { useHistory } from "react-router-dom";
+import { useSearchParams } from "../hooks";
 import "../styles/RouteInput.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 
 export default function RouteInputRow({ direction }) {
   const [options, setOptions] = useState([]);
   const { state, dispatch } = useContext(StoreContext);
-  const history = useHistory()
-  const { params } = useSearchParams()
+  const history = useHistory();
+  const { params } = useSearchParams();
+  const isLocal =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1" ||
+    window.location.hostname === "";
 
   // Remove focus from input
   useEffect(() => {
@@ -43,20 +47,23 @@ export default function RouteInputRow({ direction }) {
   function handleSelectedChange(value) {
     // Update the store with the selected location for the route
     const location = value.length > 0 ? [value[0]] : [];
-    const center = location.length > 0 ? location[0].center : null
+    const center = location.length > 0 ? location[0].center : null;
     if (center === null) {
-      params.delete(direction)
+      params.delete(direction);
     } else {
-      params.set(direction, JSON.stringify(center))
+      params.set(direction, JSON.stringify(center));
     }
     dispatch({ type, payload: location });
     history.push({
-      pathname: "/",
-      search: "?" + params.toString()
-    })
+      pathname: isLocal ? "/" : "/DriveWise/", // change to "/" for localhost
+      search: "?" + params.toString(),
+    });
     // We need to remember to clear the coordinates here so the markers are removed
     if (value.length === 0)
-      dispatch({ type: ActionType.SET_ROUTE, payload: { coordinates: [], time: "" } });
+      dispatch({
+        type: ActionType.SET_ROUTE,
+        payload: { coordinates: [], time: "" },
+      });
   }
 
   function handleGeolocationButton() {
@@ -66,12 +73,12 @@ export default function RouteInputRow({ direction }) {
           text: json.features[0].place_name,
           center: state.userLocation,
         };
-        params.set(direction, JSON.stringify(state.userLocation))
+        params.set(direction, JSON.stringify(state.userLocation));
         dispatch({ type, payload: [value] });
         history.push({
-          pathname: "/",
-          search: "?" + params.toString()
-        })
+          pathname: isLocal ? "/" : "/DriveWise/", // change to "/" for localhost
+          search: "?" + params.toString(),
+        });
       }
     });
   }
@@ -79,15 +86,19 @@ export default function RouteInputRow({ direction }) {
   function handleAddLocation() {
     dispatch({
       type: ActionType.SET_MAP_MODE,
-      payload: state.mapMode === "normal" ? `select-${direction}` : "normal"
+      payload: state.mapMode === "normal" ? `select-${direction}` : "normal",
     });
   }
 
   function getBlurClassName() {
     if (direction === "to")
-      return state.mapMode === "select-to" ? "route-input-button unblur" : "route-input-button"
+      return state.mapMode === "select-to"
+        ? "route-input-button unblur"
+        : "route-input-button";
     else
-      return state.mapMode === "select-from" ? "route-input-button unblur" : "route-input-button"
+      return state.mapMode === "select-from"
+        ? "route-input-button unblur"
+        : "route-input-button";
   }
 
   return (
