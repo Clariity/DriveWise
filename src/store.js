@@ -1,6 +1,7 @@
 // https://blog.logrocket.com/use-hooks-and-context-not-react-and-redux/
 import React from "react";
 
+
 const date = new Date();
 
 const ActionType = {
@@ -53,6 +54,7 @@ const StateProvider = ({ children }) => {
       case ActionType.SET_ROUTE_TO_LOCATION:
         return { ...state, routeToLocation: action.payload };
       case ActionType.SET_ROUTE_FROM_LOCATION:
+        
         return { ...state, routeFromLocation: action.payload };
       case ActionType.SET_START_DATE:
         return { ...state, startDate: action.payload };

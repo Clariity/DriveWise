@@ -91,7 +91,7 @@ export default function MapWindow() {
 
     function inDateRange({ startDate, endDate }) {
       const endsAfterStartDate = endDate >= selectedStart
-      const startsBeforeEndDate = startDate <= selectedEnd  
+      const startsBeforeEndDate = startDate <= selectedEnd
       return (endsAfterStartDate && startsBeforeEndDate)
     }
 
@@ -99,7 +99,7 @@ export default function MapWindow() {
       const currentRoadworks = [...state.heCurrent, ...state.tflCurrent].filter(inDateRange).filter(point => isPointNear(point, coordinates))
       const plannedRoadworks = [...state.hePlanned, ...state.tflPlanned].filter(inDateRange).filter(point => isPointNear(point, coordinates))
       const severeRoadworks = [...state.heIncidents, ...state.tflSevere].filter(inDateRange).filter(point => isPointNear(point, coordinates))
-      
+
       return [...severeRoadworks, ...currentRoadworks, ...plannedRoadworks];
     } else {
       return []
@@ -114,7 +114,7 @@ export default function MapWindow() {
     dispatch({ type: ActionType.SET_MAP_SPINNER, payload: false })
   }, [dispatch, routeRoadworks])
 
-  const roadworkMarkers = state.markerInfo.map(roadwork => (
+  const roadworkMarkers = state.markerInfo.filter(roadwork => !state.roadworkFilter.includes(roadwork["__type"])).map(roadwork => (
     <Marker key={roadwork.id} point={roadwork} color={getColor(roadwork)} />
   ))
 

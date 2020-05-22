@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap"
 
 export default ({ show, setShowAboutModal }) => {
   return (
-    <Modal show={show} onHide={() => setShowAboutModal(false)} style={{opacity:1}} centered>
+    <Modal show={show} onHide={() => setShowAboutModal(false)} style={{ opacity: 1 }} centered>
       <Modal.Header>
         <Modal.Title>
           <h1>
@@ -27,6 +27,12 @@ export default ({ show, setShowAboutModal }) => {
           <li>Whilst the services we use (Highways England and Transport for London) do offer their own tools that displays this information, <span className="drive-wise-font">DriveWise</span> brings all the information together in one useful tool that is easy to understand and use.</li>
           <li>Additionally, <span className="drive-wise-font">DriveWise</span> provides routing capabilities, date filtering and a user friendly interface to interact with the data.</li>
         </ul>
+        <div className="attributions">
+          <p>Made by Armand Maric, James Errington, Ryan Gregory, Simon Brooks for COMP 6214 Open Data Innovation, University of Southampton</p>
+          <p> Contains public sector information licensed under the <br /><a href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="__blank">Open Government Licence v3.0.</a></p>
+          <p>Powered by TfL Open Data</p>
+          <p>Contains OS data © Crown copyright and database rights 2016 and Geomni UK Map data © and database rights [2019]</p>
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <h2 className="app-bar-button" onClick={() => setShowAboutModal(false)}>Close</h2>

@@ -59,7 +59,7 @@ label img {
 
 :checked + label::before {
   content: "✓";
-  background-color: grey;
+  background-color: green;
   transform: scale(1);
   z-index: 100;
 }

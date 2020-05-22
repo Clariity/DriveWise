@@ -35,7 +35,7 @@ function convertHeXmlToJson(htmlcollection) {
   );
 }
 
-export default async function fetchRoadworkData() {
+export async function fetchRoadworkData() {
   const { date, today, nextWeek } = getDates();
 
   console.log("Fetching data");
@@ -74,8 +74,6 @@ export default async function fetchRoadworkData() {
 
   const incidentItems = heIncidentsXml.getElementsByTagName("item");
   const newHeIncidents = convertHeXmlToJson(incidentItems)
-  console.log(newHeIncidents)
-
   const roadworksItems = heRoadworksXml.getElementsByTagName("item");
   const newRoadworks = convertHeXmlToJson(roadworksItems)
 

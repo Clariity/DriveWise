@@ -63,3 +63,11 @@
     transparent
   )
 }
+
+.attributions {
+  text-align: center;
+}
+
+.attributions a {
+  color: white;
+}

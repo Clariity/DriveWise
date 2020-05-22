@@ -26,7 +26,7 @@ export default function RouteInfoBox() {
       <h3>Route details</h3>
       <div>
         <p>Found {state.markerInfo.length} roadworks or incidents on route</p>
-        <p>Estimtated route time: {parseTime(state.routeTime)}</p>
+        <p>Estimated route time: {parseTime(state.routeTime)}</p>
       </div>
       <h4>Filter roadworks</h4>
       <div className="checkbox-row">

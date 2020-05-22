@@ -4,6 +4,8 @@ import "leaflet-spin"
 import { StoreContext, ActionType } from "../store";
 import { reverseLocationLookup } from "../data";
 import Swal from 'sweetalert2'
+import { useHistory } from "react-router-dom"
+import { useSearchParams } from "../hooks"
 
 const spinnerOptions = {
   lines: 13, // The number of lines to draw
@@ -30,6 +32,8 @@ export default function Map({ children }) {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const { state, dispatch } = useContext(StoreContext);
+  const history = useHistory()
+  const { params } = useSearchParams()
 
   // We intialise the map once on initial component render
   useEffect(() => {
@@ -45,9 +49,13 @@ export default function Map({ children }) {
   // Center the map
   useEffect(() => {
     if (map) {
-      map.setView(state.userLocation, 12);
+      if (state.routeFromLocation.length > 0) {
+        map.setView(state.routeFromLocation[0].center, 12);
+      } else {
+        map.setView(state.userLocation, 12);
+      }
     }
-  }, [map, state.userLocation]);
+  }, [map, state.userLocation, state.routeFromLocation]);
 
   // update map reference
   useEffect(() => {
@@ -72,7 +80,12 @@ export default function Map({ children }) {
                 text: json.features[0].place_name,
                 center: coords,
               };
+              params.set(state.mapMode === "select-from" ? "from" : "to", JSON.stringify(coords))
               dispatch({ type, payload: [value] });
+              history.push({
+                pathname: "/",
+                search: "?" + params.toString()
+              })
               dispatch({
                 type: ActionType.SET_MAP_MODE,
                 payload: "normal",
