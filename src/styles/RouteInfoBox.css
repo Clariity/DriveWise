@@ -72,3 +72,16 @@ label img {
   margin-top: 20px;
   color: black;
 }
+.overnight-button {
+  height: 35px;
+  padding: 0px 10px;
+  border-radius: 0.25rem;
+  border-style: none;
+  background-color: #fff;
+  margin-left: 5px;
+  justify-content: center;
+}
+.overnight-button:hover {
+  cursor: pointer;
+  background-color: rgb(226, 226, 226);
+}

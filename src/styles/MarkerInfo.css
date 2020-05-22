@@ -1,5 +1,5 @@
 .marker-info {
-  margin: 5px; 
+  margin: 5px;
   padding: 5px;
   border-bottom: white solid 1px;
   display: flex;
@@ -17,8 +17,16 @@
   width: 25px;
   height: 42px;
 }
-.marker-icon-image:hover {
+.marker-icon-image:hover,
+.marker-icon-image-night:hover {
   cursor: pointer;
+}
+
+.marker-icon-image-night {
+  margin: auto;
+  margin-bottom: 10px;
+  width: 39px;
+  height: 47px;
 }
 
 .icon-info {
@@ -42,7 +50,7 @@
 }
 
 .show-technical-details {
-  font-style: normal !important; 
+  font-style: normal !important;
 }
 .show-technical-details:hover {
   cursor: pointer;
