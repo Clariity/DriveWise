@@ -1,0 +1,57 @@
+.marker-info {
+  margin: 5px;
+  padding: 5px;
+  border-bottom: white solid 1px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+}
+
+.marker-info:last-child {
+  border-bottom: unset;
+}
+
+.marker-icon-image {
+  margin: auto;
+  margin-bottom: 10px;
+  width: 25px;
+  height: 42px;
+}
+.marker-icon-image:hover,
+.marker-icon-image-night:hover {
+  cursor: pointer;
+}
+
+.marker-icon-image-night {
+  margin: auto;
+  margin-bottom: 10px;
+  width: 39px;
+  height: 47px;
+}
+
+.icon-info {
+  font-size: 1.3rem;
+}
+
+.marker-info-content {
+  text-align: left;
+}
+
+.info-title {
+  font-weight: 600;
+}
+
+.info-technical-details > a {
+  color: white;
+  text-decoration: underline;
+}
+.info-technical-details > a:visited {
+  color: white;
+}
+
+.show-technical-details {
+  font-style: normal !important;
+}
+.show-technical-details:hover {
+  cursor: pointer;
+}

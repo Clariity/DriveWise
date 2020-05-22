@@ -1,0 +1,97 @@
+@media (max-width: 1600px) {
+  .route-input-row {
+    flex-direction: column;
+  }
+  .button-group {
+    margin: 0px 5px;
+  }
+  .route-input-button {
+    width: 100%;
+    margin-top: 5px;
+  }
+  .location-input {
+    width: unset;
+    height: 40px;
+  }
+  .route-input-button:first-child {
+    margin-left: unset;
+  }
+  .route-input-button:last-child {
+    margin-right: unset;
+  }
+}
+
+@media (max-width: 1279px) {
+  .App {
+    flex-direction: column;
+  }
+  .route-window {
+    max-height: unset;
+    width: 100%;
+    height: 100%;
+    min-height: 20vh;
+    flex-direction: column;
+    order: 2;
+    align-items: center;
+  }
+  .map-window {
+    width: 100%;
+    height: calc(80vh - 60px);
+    order: 1;
+  }
+  .blur {
+    min-width: 100%;
+    height: 100%;
+  }
+
+  .route-inputs {
+    flex-direction: row;
+  }
+  .route-input-group {
+    width: 50vw;
+  }
+  .date-input-group {
+    padding-top: 10px;
+    flex-direction: column;
+  }
+  .route-info,
+  .route-mode-info {
+    width: calc(100vw - 40px);
+    min-height: calc(20vh - 20px);
+    margin-top: 5px;
+    max-height: 600px;
+  }
+  .route-info-box {
+    width: calc(100vw - 40px);
+  }
+
+  .react-datepicker__triangle {
+    transform: translate3d(70px, 0px, 0px);
+  }
+  .react-datepicker__triangle::before {
+    display: none;
+  }
+  .marker-info-content {
+    text-align: center;
+  }
+}
+
+@media (max-width: 800px) {
+  .route-input-group {
+    width: calc(100%);
+  }
+  .route-info,
+  .route-mode-info {
+    min-width: calc(100% - 40px);
+    width: calc(100vw - 40px);
+  }
+  .marker-info-content {
+    text-align: left;
+  }
+}
+
+@media (max-width: 600px) {
+  .route-inputs {
+    flex-direction: column;
+  }
+}

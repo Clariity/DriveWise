@@ -1,0 +1,180 @@
+.route-inputs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.route-input-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.route-input-row:last-child {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.location-input {
+  width: calc(100% - 20px);
+  margin: 0px 5px;
+}
+
+.location-input input {
+  width: 100%;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.route-input-button {
+  margin-right: 5px;
+}
+
+.route-input-button {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 0.25rem;
+  border-style: none;
+  background-color: #fff;
+  margin-left: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+.route-input-button:hover {
+  cursor: pointer;
+  background-color: rgb(226, 226, 226);
+}
+
+.selectLocationfrom,
+.selectLocationto {
+  z-index: 101;
+}
+
+.form-control,
+.rbt-input-hint {
+  text-indent: 10px;
+}
+
+.rbt-input-main {
+  width: 100%;
+  height: 100%;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.5rem;
+  padding: 5px;
+  border-radius: 0.25rem;
+  border-style: none;
+}
+
+.rbt-input-hint {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.5rem;
+}
+
+.dropdown-menu,
+.rbt-menu {
+  border-radius: 0.25rem;
+  border: 1px solid #282c34;
+  margin: 0.1875rem 0 0;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.5rem;
+  color: #000 !important;
+  text-align: left;
+  background-color: #fff;
+  display: flex !important;
+  flex-direction: column;
+  z-index: 100;
+  max-height: unset !important;
+}
+
+.dropdown-item {
+  padding: 10px;
+  color: #000;
+  text-decoration: none;
+}
+
+.rbt-highlight-text {
+  background-color: unset;
+  font-weight: bold;
+}
+
+.dropdown-item:hover {
+  background-color: rgb(216, 216, 216);
+}
+
+.rbt-aux {
+  display: flex;
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 34px;
+}
+
+.route-input-group {
+  padding: 10px;
+  /* padding-bottom: 0px; */
+  position: relative;
+}
+
+.route-info {
+  border-style: solid;
+  overflow-y: auto;
+  border-radius: 3px;
+}
+
+.route-mode-info {
+  border-style: dashed;
+}
+
+.route-info,
+.route-mode-info {
+  height: 100%;
+  border-color: white;
+  border-width: 2px;
+  margin: 10px;
+  margin-top: 0px;
+  padding: 10px;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.5rem;
+  color: white;
+  justify-content: center;
+  min-width: 94%;
+}
+
+.blur {
+  background-color: #000000;
+  opacity: 0.7;
+  position: absolute;
+  width: 20vw;
+  max-width: 20vw;
+  height: calc(100% - 5px);
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.route-inputs > .route-input-group:first-of-type > .blur {
+  height: 100%;
+}
+
+.unblur {
+  z-index: 101;
+}
+
+#crosshairs {
+  cursor: crosshair;
+}
+
+p {
+  line-height: 2rem;
+}
