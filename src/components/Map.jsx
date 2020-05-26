@@ -44,7 +44,7 @@ export default function Map({ children }) {
     const map = L.map(mapRef.current, {
       minZoom: 6,
     });
-    L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+    L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noopener noreferrer">Mapbox</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noopener noreferrer">Improve this map</a>',
     }).addTo(map);
